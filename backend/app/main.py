@@ -54,29 +54,42 @@ def health_check():
 # APK Download & Status Endpoints
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 APK_PATH = os.path.join(BASE_DIR, "frontend", "android", "app", "build", "outputs", "apk", "debug", "app-debug.apk")
+ROOT_APK_PATH = os.path.join(BASE_DIR, "apk", "BorrowLoop-v1.0.apk")
+
+
+def get_active_apk_path():
+    if os.path.exists(ROOT_APK_PATH):
+        return ROOT_APK_PATH
+    if os.path.exists(APK_PATH):
+        return APK_PATH
+    return None
 
 
 @app.get("/api/app/apk-status")
 def get_apk_status():
-    exists = os.path.exists(APK_PATH)
+    active_path = get_active_apk_path()
+    exists = active_path is not None
     file_size_mb = 0.0
     if exists:
-        file_size_mb = round(os.path.getsize(APK_PATH) / (1024 * 1024), 2)
+        file_size_mb = round(os.path.getsize(active_path) / (1024 * 1024), 2)
     return {
         "is_compiled": exists,
-        "apk_path": APK_PATH if exists else None,
+        "apk_path": active_path if exists else None,
         "file_size_mb": file_size_mb,
-        "download_url": "/download/app-debug.apk" if exists else None,
-        "instructions": "Transfer app-debug.apk to Android phone, enable 'Install from unknown sources', install, and launch."
+        "download_url": "/download/BorrowLoop-v1.0.apk" if exists else None,
+        "instructions": "Transfer BorrowLoop APK to Android phone, enable 'Install from unknown sources', install, and launch."
     }
 
 
+@app.get("/download/BorrowLoop-v1.0.apk")
 @app.get("/download/app-debug.apk")
 def download_apk():
-    if os.path.exists(APK_PATH):
+    active_path = get_active_apk_path()
+    if active_path and os.path.exists(active_path):
+        filename = os.path.basename(active_path)
         return FileResponse(
-            path=APK_PATH,
-            filename="BorrowLoop-debug.apk",
+            path=active_path,
+            filename=filename,
             media_type="application/vnd.android.package-archive"
         )
     return JSONResponse(
@@ -85,7 +98,7 @@ def download_apk():
     )
 
 
-# Static React Bundle Serving (Single-Process Architecture)
+# Static React Bundle Serving (Single-Process Architecture & Website Delivery)
 FRONTEND_DIST = os.path.join(BASE_DIR, "frontend", "dist")
 
 if os.path.exists(FRONTEND_DIST):
@@ -93,6 +106,14 @@ if os.path.exists(FRONTEND_DIST):
     assets_dir = os.path.join(FRONTEND_DIST, "assets")
     if os.path.exists(assets_dir):
         app.mount("/assets", StaticFiles(directory=assets_dir), name="assets")
+
+    # Explicit root route for SPA website
+    @app.get("/")
+    def serve_react_root():
+        index_file = os.path.join(FRONTEND_DIST, "index.html")
+        if os.path.exists(index_file):
+            return FileResponse(index_file)
+        return HTMLResponse("<h1>BorrowLoop: Frontend compiling...</h1>")
 
     # Catch-all route to serve React index.html for SPA client-side routing
     @app.get("/{full_path:path}")

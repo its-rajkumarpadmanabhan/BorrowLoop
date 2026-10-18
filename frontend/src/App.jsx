@@ -144,11 +144,33 @@ const FALLBACK_RENTALS = [
 const getInitialApiBase = () => {
   const saved = localStorage.getItem('borrowloop_api_base');
   if (saved) return saved;
-  const hostname = window.location.hostname || 'localhost';
-  if (hostname === 'localhost' || hostname === '127.0.0.1') {
-    return 'http://localhost:8000';
+
+  if (typeof window !== 'undefined') {
+    // Check if running inside Capacitor Android/iOS native WebView
+    const isCapacitor = 
+      window.location.protocol === 'capacitor:' || 
+      window.location.protocol === 'file:' || 
+      Boolean(window.Capacitor?.isNativePlatform?.());
+
+    if (isCapacitor) {
+      const hostname = window.location.hostname || 'localhost';
+      return (hostname === 'localhost' || hostname === '127.0.0.1')
+        ? 'http://localhost:8000'
+        : `http://${hostname}:8000`;
+    }
+
+    // In Vite local development mode (port 5173), proxy to FastAPI on port 8000
+    if (window.location.port === '5173') {
+      const hostname = window.location.hostname || 'localhost';
+      return `http://${hostname}:8000`;
+    }
+
+    // For web browser access (FastAPI serving static dist, cloud hosting, custom port/domain):
+    // Use the origin directly so HTTPS, relative routing, and port preservation work seamlessly
+    return window.location.origin;
   }
-  return `http://${hostname}:8000`;
+
+  return 'http://localhost:8000';
 };
 
 export default function App() {
@@ -592,7 +614,9 @@ export default function App() {
             <button
               className="btn-secondary"
               onClick={() => {
-                const def = 'http://localhost:8000';
+                const def = (typeof window !== 'undefined' && window.location.protocol.startsWith('http') && window.location.port !== '5173')
+                  ? window.location.origin
+                  : 'http://localhost:8000';
                 setCustomApiUrl(def);
                 setApiBase(def);
                 localStorage.removeItem('borrowloop_api_base');
@@ -600,7 +624,7 @@ export default function App() {
                 setShowSettings(false);
               }}
             >
-              Reset Localhost
+              Reset Default
             </button>
           </div>
         </div>
@@ -1392,14 +1416,14 @@ export default function App() {
               </div>
 
               <div style={{ marginTop: 12, fontSize: 12, color: '#64748b', wordBreak: 'break-all' }}>
-                <strong>Path:</strong> <code>frontend/android/app/build/outputs/apk/debug/app-debug.apk</code>
+                <strong>Path:</strong> <code>{apkStatus?.apk_path || 'apk/BorrowLoop-v1.0.apk'}</code>
               </div>
 
               {/* Direct Download Button */}
               <div style={{ marginTop: 20 }}>
                 <a
-                  href={`${apiBase}/download/app-debug.apk`}
-                  download="BorrowLoop-debug.apk"
+                  href={`${apiBase}${apkStatus?.download_url || '/download/BorrowLoop-v1.0.apk'}`}
+                  download={apkStatus?.download_url ? apkStatus.download_url.split('/').pop() : 'BorrowLoop-v1.0.apk'}
                   className="btn-primary"
                   style={{
                     display: 'inline-flex',
@@ -1411,7 +1435,7 @@ export default function App() {
                   }}
                 >
                   <Download size={20} />
-                  Download Standalone .APK File ({apkStatus?.file_size_mb || '4.22'} MB)
+                  Download Standalone .APK File ({apkStatus?.file_size_mb || '4.12'} MB)
                 </a>
               </div>
             </div>
