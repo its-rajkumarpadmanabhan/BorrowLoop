@@ -50,10 +50,34 @@ class ToolPublic(BaseModel):
     distance_label: Optional[str] = None       # e.g., "0.8 km away in Pincode 695001"
     
     # Shielded Owner Details
+    owner_id: str
     owner_display_name: str
     owner_phone_masked: str  # e.g., "+91 98*** 12345"
     address_privacy_badge: str = "🔒 Exact street address & contact locked until booking accepted"
     is_available: bool
+
+    class Config:
+        from_attributes = True
+
+
+class UserLoginRegister(BaseModel):
+    email: str
+    full_name: Optional[str] = None
+    phone: Optional[str] = None
+    locality: Optional[str] = None
+    pincode: Optional[str] = None
+    upi_id: Optional[str] = None
+
+
+class UserResponse(BaseModel):
+    id: int
+    email: str
+    full_name: str
+    phone: str
+    locality: Optional[str] = ""
+    pincode: Optional[str] = ""
+    upi_id: Optional[str] = ""
+    created_at: Optional[datetime.datetime] = None
 
     class Config:
         from_attributes = True

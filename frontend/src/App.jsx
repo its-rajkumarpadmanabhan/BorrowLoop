@@ -4,195 +4,82 @@ import {
   MessageCircle, ExternalLink, Calendar, CheckCircle, Clock, AlertCircle,
   Smartphone, Download, RefreshCw, ChevronRight, Wrench, Settings, Info,
   CheckCircle2, ArrowRight, UserCheck, Check, Sparkles, Send, Box, Repeat,
-  PlusCircle, Zap, ShieldAlert, Navigation, Star, ArrowUpRight
+  PlusCircle, Zap, ShieldAlert, Navigation, Star, ArrowUpRight, LogOut, User, Mail
 } from 'lucide-react';
 
-// Fallback mock tools for offline / instant client resilience
-const FALLBACK_TOOLS = [
-  {
-    id: 1,
-    title: "Bosch GBH 2-26 DRE Rotary Hammer Drill Set",
-    category: "Power Tools",
-    description: "Heavy duty 800W rotary hammer drill with SDS-plus chuck. Includes masonry drill bits and flat chisel. Perfect for concrete drilling and wall mounting.",
-    daily_rate: 350.0,
-    hourly_rate: 60.0,
-    replacement_deposit: 6500.0,
-    condition: "Excellent (Like New)",
-    image_url: "https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=700&q=80",
-    approx_location: "Kowdiar, Pincode 695003",
-    pincode: "695003",
-    approx_distance_km: 0.8,
-    distance_label: "0.8 km away in Pincode 695003",
-    owner_display_name: "Anand (Verified Neighbor)",
-    owner_phone_masked: "+91 98*** 12345",
-    is_available: true
-  },
-  {
-    id: 2,
-    title: "DeWalt 20V MAX XR Cordless Circular Saw (7-1/4\")",
-    category: "Carpentry & Woodwork",
-    description: "Brushless motor with 5500 RPM for fast cuts. Includes 2x 5.0Ah lithium battery packs, fast dual charger, and 24-tooth blade.",
-    daily_rate: 450.0,
-    hourly_rate: 80.0,
-    replacement_deposit: 12000.0,
-    condition: "Pristine",
-    image_url: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=700&q=80",
-    approx_location: "Sasthamangalam, Pincode 695014",
-    pincode: "695014",
-    approx_distance_km: 1.4,
-    distance_label: "1.4 km away in Pincode 695014",
-    owner_display_name: "Priya (Verified Neighbor)",
-    owner_phone_masked: "+91 98*** 98765",
-    is_available: true
-  },
-  {
-    id: 3,
-    title: "Kärcher K4 Power Control High-Pressure Washer 130 Bar",
-    category: "Cleaning & Pressure",
-    description: "130 bar pressure washer with Vario Power spray wand and Dirt Blaster. 6-meter high-pressure hose. Ideal for car detailing and patio cleaning.",
-    daily_rate: 600.0,
-    hourly_rate: 100.0,
-    replacement_deposit: 18000.0,
-    condition: "Excellent",
-    image_url: "https://images.unsplash.com/photo-1527515637462-cff94eecc1ac?auto=format&fit=crop&w=700&q=80",
-    approx_location: "Pattom, Pincode 695011",
-    pincode: "695011",
-    approx_distance_km: 1.9,
-    distance_label: "1.9 km away in Pincode 695011",
-    owner_display_name: "Anand (Verified Neighbor)",
-    owner_phone_masked: "+91 98*** 12345",
-    is_available: true
-  },
-  {
-    id: 4,
-    title: "Werner 20-Foot Telescopic Multi-Position Aluminium Ladder",
-    category: "Ladders & Access",
-    description: "Heavy-duty 150 kg load rated aluminium telescopic ladder. Converts into step ladder, stairway ladder, extension ladder, and scaffold base.",
-    daily_rate: 300.0,
-    hourly_rate: 50.0,
-    replacement_deposit: 9500.0,
-    condition: "Good & Sturdy",
-    image_url: "https://images.unsplash.com/photo-1541888946425-d0fbb18086f6?auto=format&fit=crop&w=700&q=80",
-    approx_location: "Statue, Pincode 695001",
-    pincode: "695001",
-    approx_distance_km: 2.3,
-    distance_label: "2.3 km away in Pincode 695001",
-    owner_display_name: "Kiran (Verified Neighbor)",
-    owner_phone_masked: "+91 97*** 11223",
-    is_available: true
-  }
-];
-
-// Fallback sample rentals
-const FALLBACK_RENTALS = [
-  {
-    id: 1,
-    tool_id: 1,
-    tool_title: "Bosch GBH 2-26 DRE Rotary Hammer Drill Set",
-    tool_category: "Power Tools",
-    borrower_id: "borrower_rahul",
-    borrower_name: "Rahul Varma",
-    borrower_phone: "🔒 Masked until accepted",
-    owner_id: "owner_anand",
-    owner_name: "Anand Nair",
-    start_date: "Tomorrow",
-    end_date: "In 2 days",
-    duration_days: 2,
-    daily_rate: 350.0,
-    rental_fee: 700.0,
-    security_deposit: 6500.0,
-    total_amount: 7200.0,
-    payment_method: "UPI",
-    upi_id: "owner_anand@borrowloop",
-    status: "REQUESTED",
-    is_contact_unmasked: false,
-    owner_full_phone: null,
-    owner_exact_address: null,
-    google_maps_nav_url: null,
-    refund_status: "PENDING"
-  },
-  {
-    id: 2,
-    tool_id: 2,
-    tool_title: "DeWalt 20V MAX XR Cordless Circular Saw (7-1/4\")",
-    tool_category: "Carpentry & Woodwork",
-    borrower_id: "borrower_rahul",
-    borrower_name: "Rahul Varma",
-    borrower_phone: "+919895012345",
-    owner_id: "owner_priya",
-    owner_name: "Priya Menon",
-    start_date: "Today",
-    end_date: "Tomorrow",
-    duration_days: 1,
-    daily_rate: 450.0,
-    rental_fee: 450.0,
-    security_deposit: 12000.0,
-    total_amount: 12450.0,
-    payment_method: "UPI",
-    upi_id: "owner_priya@borrowloop",
-    status: "ACCEPTED",
-    is_contact_unmasked: true,
-    owner_full_phone: "+919847987654",
-    owner_direct_call_url: "tel:+919847987654",
-    owner_whatsapp_url: "https://wa.me/919847987654?text=Hi%20Priya,%20I'm%20Rahul%20regarding%20BorrowLoop!",
-    owner_exact_address: "Villa 14, Green Valley Enclave, Vellayambalam-Sasthamangalam Road, Pincode 695014",
-    google_maps_nav_url: "https://www.google.com/maps/dir/?api=1&destination=8.5145,76.9732",
-    refund_status: "PENDING"
-  }
-];
+const isCapacitorApp = () => {
+  return typeof window !== 'undefined' && (
+    window.location.protocol === 'capacitor:' || 
+    window.location.protocol === 'file:' || 
+    Boolean(window.Capacitor?.isNativePlatform?.())
+  );
+};
 
 const getInitialApiBase = () => {
   const saved = localStorage.getItem('borrowloop_api_base');
   if (saved) return saved;
 
   if (typeof window !== 'undefined') {
-    // Check if running inside Capacitor Android/iOS native WebView
-    const isCapacitor = 
-      window.location.protocol === 'capacitor:' || 
-      window.location.protocol === 'file:' || 
-      Boolean(window.Capacitor?.isNativePlatform?.());
-
-    if (isCapacitor) {
+    if (isCapacitorApp()) {
       const hostname = window.location.hostname || 'localhost';
       return (hostname === 'localhost' || hostname === '127.0.0.1')
         ? 'http://localhost:8000'
         : `http://${hostname}:8000`;
     }
 
-    // In Vite local development mode (port 5173), proxy to FastAPI on port 8000
     if (window.location.port === '5173') {
       const hostname = window.location.hostname || 'localhost';
       return `http://${hostname}:8000`;
     }
 
-    // For web browser access (FastAPI serving static dist, cloud hosting, custom port/domain):
-    // Use the origin directly so HTTPS, relative routing, and port preservation work seamlessly
     return window.location.origin;
   }
 
   return 'http://localhost:8000';
 };
 
+const getStoredUser = () => {
+  try {
+    const raw = localStorage.getItem('borrowloop_user');
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+};
+
 export default function App() {
   const [apiBase, setApiBase] = useState(getInitialApiBase);
-  const [serverOnline, setServerOnline] = useState(false);
-  const [activeTab, setActiveTab] = useState('explore'); // 'explore', 'rentals', 'add_tool', 'apk'
-  const [userRole, setUserRole] = useState('BORROWER'); // 'BORROWER' | 'OWNER'
-  
-  // Tools & Search State
-  const [tools, setTools] = useState(FALLBACK_TOOLS);
-  const [categories, setCategories] = useState(['All', 'Power Tools', 'Carpentry & Woodwork', 'Cleaning & Pressure', 'Ladders & Access', 'Gardening & Yard', 'Measurement & Detection']);
+  const [currentUser, setCurrentUser] = useState(getStoredUser);
+  const [activeTab, setActiveTab] = useState('explore'); // 'explore', 'rentals', 'apk'
+  const [isMobileApp, setIsMobileApp] = useState(false);
+
+  // Auth Form State (for initial login / register)
+  const [authEmail, setAuthEmail] = useState('');
+  const [authFullName, setAuthFullName] = useState('');
+  const [authPhone, setAuthPhone] = useState('');
+  const [authLocality, setAuthLocality] = useState('');
+  const [authPincode, setAuthPincode] = useState('');
+  const [authUpiId, setAuthUpiId] = useState('');
+  const [authLoading, setAuthLoading] = useState(false);
+  const [authError, setAuthError] = useState('');
+
+  // Tools & Search State (NO fake seed data)
+  const [tools, setTools] = useState([]);
+  const [categories, setCategories] = useState([
+    'All', 'Power Tools', 'Carpentry & Woodwork', 'Cleaning & Pressure', 
+    'Ladders & Access', 'Gardening & Yard', 'Measurement & Detection', 'Automotive'
+  ]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedPincode, setSelectedPincode] = useState('');
   const [loadingTools, setLoadingTools] = useState(false);
-  
-  // Rentals & Handover State
-  const [rentals, setRentals] = useState(FALLBACK_RENTALS);
-  const [selectedRentalId, setSelectedRentalId] = useState(1);
-  const [rentalFilter, setRentalFilter] = useState('ALL');
+
+  // Rentals State (NO fake seed data)
+  const [rentals, setRentals] = useState([]);
+  const [selectedRentalId, setSelectedRentalId] = useState(null);
+  const [rentalRoleFilter, setRentalRoleFilter] = useState('ALL'); // 'ALL' | 'BORROWED' | 'OWNED'
   const [actionLoading, setActionLoading] = useState(false);
-  
+
   // Booking Modal State
   const [bookingTool, setBookingTool] = useState(null);
   const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]);
@@ -200,40 +87,33 @@ export default function App() {
     new Date(Date.now() + 86400000 * 2).toISOString().split('T')[0]
   );
   const [paymentMethod, setPaymentMethod] = useState('UPI');
-  const [borrowerName, setBorrowerName] = useState('Rahul Varma');
-  const [borrowerPhone, setBorrowerPhone] = useState('+919895012345');
   const [bookingSuccess, setBookingSuccess] = useState(null);
+  const [bookingError, setBookingError] = useState('');
 
   // Add Tool Modal State
   const [showAddToolModal, setShowAddToolModal] = useState(false);
-  const [newToolTitle, setNewToolTitle] = useState('');
-  const [newToolCategory, setNewToolCategory] = useState('Power Tools');
-  const [newToolDescription, setNewToolDescription] = useState('');
-  const [newToolDailyRate, setNewToolDailyRate] = useState('400');
-  const [newToolDeposit, setNewToolDeposit] = useState('8000');
-  const [newToolLocality, setNewToolLocality] = useState('Kowdiar');
-  const [newToolPincode, setNewToolPincode] = useState('695003');
-  const [newToolOwnerName, setNewToolOwnerName] = useState('Anand Nair');
-  const [newToolOwnerPhone, setNewToolOwnerPhone] = useState('+919847123456');
+  const [newTitle, setNewTitle] = useState('');
+  const [newCategory, setNewCategory] = useState('Power Tools');
+  const [newDescription, setNewDescription] = useState('');
+  const [newDailyRate, setNewDailyRate] = useState('');
+  const [newHourlyRate, setNewHourlyRate] = useState('');
+  const [newDeposit, setNewDeposit] = useState('');
+  const [newCondition, setNewCondition] = useState('Excellent');
+  const [newImageUrl, setNewImageUrl] = useState('');
+  const [newHouseFlat, setNewHouseFlat] = useState('');
+  const [newStreet, setNewStreet] = useState('');
+  const [newLocality, setNewLocality] = useState('');
+  const [newPincode, setNewPincode] = useState('');
+  const [addingTool, setAddingTool] = useState(false);
+  const [addToolError, setAddToolError] = useState('');
 
-  // APK & System State
+  // APK Status
   const [apkStatus, setApkStatus] = useState(null);
-  const [showSettings, setShowSettings] = useState(false);
-  const [customApiUrl, setCustomApiUrl] = useState(apiBase);
 
-  // Health check & Server Discovery
-  const checkHealth = async (base = apiBase) => {
-    try {
-      const res = await fetch(`${base}/api/health`, { signal: AbortSignal.timeout(2500) });
-      if (res.ok) {
-        setServerOnline(true);
-        return true;
-      }
-    } catch {
-      setServerOnline(false);
-    }
-    return false;
-  };
+  // Check if running in mobile app wrapper
+  useEffect(() => {
+    setIsMobileApp(isCapacitorApp());
+  }, []);
 
   // Fetch Tools
   const fetchTools = async () => {
@@ -243,14 +123,14 @@ export default function App() {
       if (searchQuery) url += `query=${encodeURIComponent(searchQuery)}&`;
       if (selectedCategory && selectedCategory !== 'All') url += `category=${encodeURIComponent(selectedCategory)}&`;
       if (selectedPincode) url += `pincode=${encodeURIComponent(selectedPincode)}&`;
-      
-      const res = await fetch(url, { signal: AbortSignal.timeout(3000) });
+
+      const res = await fetch(url, { signal: AbortSignal.timeout(4000) });
       if (res.ok) {
         const data = await res.json();
-        if (data.length > 0) setTools(data);
+        setTools(Array.isArray(data) ? data : []);
       }
     } catch (err) {
-      console.warn('Using client fallback tools:', err);
+      console.warn('Error fetching tools:', err);
     } finally {
       setLoadingTools(false);
     }
@@ -262,30 +142,34 @@ export default function App() {
       const res = await fetch(`${apiBase}/api/tools/categories`, { signal: AbortSignal.timeout(3000) });
       if (res.ok) {
         const data = await res.json();
-        setCategories(['All', ...data]);
+        if (Array.isArray(data) && data.length > 0) {
+          setCategories(['All', ...data]);
+        }
       }
     } catch {
-      // keep default categories
+      // keep default list
     }
   };
 
   // Fetch Rentals
   const fetchRentals = async () => {
+    if (!currentUser) return;
     try {
-      const res = await fetch(`${apiBase}/api/rentals`, { signal: AbortSignal.timeout(3000) });
+      const res = await fetch(`${apiBase}/api/rentals`, { signal: AbortSignal.timeout(4000) });
       if (res.ok) {
         const data = await res.json();
-        if (data.length > 0) {
-          setRentals(data);
-          if (!selectedRentalId) setSelectedRentalId(data[0].id);
+        const list = Array.isArray(data) ? data : [];
+        setRentals(list);
+        if (list.length > 0 && !selectedRentalId) {
+          setSelectedRentalId(list[0].id);
         }
       }
     } catch {
-      // keep fallback rentals
+      // empty state
     }
   };
 
-  // Fetch APK Status
+  // Fetch APK Status (for web users)
   const fetchApkStatus = async () => {
     try {
       const res = await fetch(`${apiBase}/api/app/apk-status`, { signal: AbortSignal.timeout(3000) });
@@ -296,28 +180,26 @@ export default function App() {
     } catch {
       setApkStatus({
         is_compiled: true,
-        file_size_mb: 4.22,
-        download_url: '/download/app-debug.apk'
+        file_size_mb: 4.12,
+        download_url: '/download/BorrowLoop-v1.0.apk'
       });
     }
   };
 
   // Polling & Lifecycle
   useEffect(() => {
-    checkHealth();
     fetchTools();
     fetchCategories();
-    fetchRentals();
     fetchApkStatus();
-
-    const interval = setInterval(() => {
-      fetchRentals();
-      checkHealth();
-      fetchApkStatus();
-    }, 4000);
-
-    return () => clearInterval(interval);
   }, [apiBase]);
+
+  useEffect(() => {
+    if (currentUser) {
+      fetchRentals();
+      const interval = setInterval(fetchRentals, 4000);
+      return () => clearInterval(interval);
+    }
+  }, [apiBase, currentUser]);
 
   // Debounced search
   useEffect(() => {
@@ -327,117 +209,94 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [searchQuery, selectedCategory, selectedPincode]);
 
-  // Handle Rental Actions (Accept, Pickup, Return)
-  const handleRentalAction = async (rentalId, actionEndpoint, payload = null) => {
-    setActionLoading(true);
+  // Handle Login / Register Submission
+  const handleAuthSubmit = async (e) => {
+    e.preventDefault();
+    setAuthError('');
+    const emailClean = authEmail.trim().toLowerCase();
+    if (!emailClean || !emailClean.includes('@') || !emailClean.includes('.')) {
+      setAuthError('Please enter a valid email address.');
+      return;
+    }
+    if (!authFullName.trim()) {
+      setAuthError('Please enter your full name.');
+      return;
+    }
+    if (!authPhone.trim()) {
+      setAuthError('Please enter your phone number.');
+      return;
+    }
+
+    setAuthLoading(true);
     try {
-      const res = await fetch(`${apiBase}/api/rentals/${rentalId}/${actionEndpoint}`, {
+      const res = await fetch(`${apiBase}/api/auth/login-or-register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: payload ? JSON.stringify(payload) : JSON.stringify({})
-      });
-      if (res.ok) {
-        await fetchRentals();
-      } else {
-        // Local simulation fallback
-        setRentals((prev) =>
-          prev.map((r) => {
-            if (r.id !== rentalId) return r;
-            if (actionEndpoint === 'accept') {
-              return {
-                ...r,
-                status: 'ACCEPTED',
-                is_contact_unmasked: true,
-                owner_full_phone: '+919847123456',
-                owner_direct_call_url: 'tel:+919847123456',
-                owner_whatsapp_url: 'https://wa.me/919847123456',
-                owner_exact_address: 'Flat 3B, Silver Palms Apartment, Kowdiar, Pincode 695003',
-                google_maps_nav_url: 'https://www.google.com/maps/dir/?api=1&destination=8.524,76.9645'
-              };
-            }
-            if (actionEndpoint === 'confirm_pickup') {
-              return { ...r, status: 'ACTIVE_RENTAL' };
-            }
-            if (actionEndpoint === 'confirm_return') {
-              return { ...r, status: 'COMPLETED', refund_status: 'REFUNDED_IN_FULL' };
-            }
-            return r;
-          })
-        );
-      }
-    } catch {
-      // Local fallback state transition
-      setRentals((prev) =>
-        prev.map((r) => {
-          if (r.id !== rentalId) return r;
-          if (actionEndpoint === 'accept') {
-            return {
-              ...r,
-              status: 'ACCEPTED',
-              is_contact_unmasked: true,
-              owner_full_phone: '+919847123456',
-              owner_direct_call_url: 'tel:+919847123456',
-              owner_whatsapp_url: 'https://wa.me/919847123456',
-              owner_exact_address: 'Flat 3B, Silver Palms Apartment, Kowdiar, Pincode 695003',
-              google_maps_nav_url: 'https://www.google.com/maps/dir/?api=1&destination=8.524,76.9645'
-            };
-          }
-          if (actionEndpoint === 'confirm_pickup') {
-            return { ...r, status: 'ACTIVE_RENTAL' };
-          }
-          if (actionEndpoint === 'confirm_return') {
-            return { ...r, status: 'COMPLETED', refund_status: 'REFUNDED_IN_FULL' };
-          }
-          return r;
+        body: JSON.stringify({
+          email: emailClean,
+          full_name: authFullName.trim(),
+          phone: authPhone.trim(),
+          locality: authLocality.trim() || 'Neighborhood',
+          pincode: authPincode.trim() || '695001',
+          upi_id: authUpiId.trim() || `${emailClean.split('@')[0]}@upi`
         })
-      );
+      });
+
+      if (res.ok) {
+        const userData = await res.json();
+        localStorage.setItem('borrowloop_user', JSON.stringify(userData));
+        setCurrentUser(userData);
+      } else {
+        const err = await res.json();
+        setAuthError(err.detail || 'Failed to authenticate. Please check your details.');
+      }
+    } catch (err) {
+      // Offline / network fallback session
+      const fallbackUser = {
+        id: Date.now(),
+        email: emailClean,
+        full_name: authFullName.trim(),
+        phone: authPhone.trim(),
+        locality: authLocality.trim() || 'Neighborhood',
+        pincode: authPincode.trim() || '695001',
+        upi_id: authUpiId.trim() || `${emailClean.split('@')[0]}@upi`
+      };
+      localStorage.setItem('borrowloop_user', JSON.stringify(fallbackUser));
+      setCurrentUser(fallbackUser);
     } finally {
-      setActionLoading(false);
+      setAuthLoading(false);
     }
   };
 
-  // Submit Booking Request
+  // Handle Logout
+  const handleLogout = () => {
+    localStorage.removeItem('borrowloop_user');
+    setCurrentUser(null);
+    setRentals([]);
+  };
+
+  // Handle Booking Creation
   const handleCreateBooking = async (e) => {
     e.preventDefault();
-    if (!bookingTool) return;
-    
-    setActionLoading(true);
-    const newBookingObj = {
-      id: Date.now(),
-      tool_id: bookingTool.id,
-      tool_title: bookingTool.title,
-      tool_category: bookingTool.category,
-      borrower_id: 'borrower_rahul',
-      borrower_name: borrowerName,
-      borrower_phone: borrowerPhone,
-      owner_id: 'owner_anand',
-      owner_name: bookingTool.owner_display_name ? bookingTool.owner_display_name.replace(' (Verified Neighbor)', '') : 'Anand Nair',
-      start_date: startDate,
-      end_date: endDate,
-      duration_days: 2,
-      daily_rate: bookingTool.daily_rate,
-      rental_fee: bookingTool.daily_rate * 2,
-      security_deposit: bookingTool.replacement_deposit,
-      total_amount: (bookingTool.daily_rate * 2) + bookingTool.replacement_deposit,
-      payment_method: paymentMethod,
-      upi_id: 'owner@borrowloop',
-      status: 'REQUESTED',
-      is_contact_unmasked: false,
-      owner_full_phone: null,
-      owner_exact_address: null,
-      google_maps_nav_url: null,
-      refund_status: 'PENDING'
-    };
+    if (!bookingTool || !currentUser) return;
+    setBookingError('');
 
+    // Self-borrowing check
+    if (bookingTool.owner_id && bookingTool.owner_id.toLowerCase() === currentUser.email.toLowerCase()) {
+      setBookingError('You cannot borrow your own equipment listing.');
+      return;
+    }
+
+    setActionLoading(true);
     try {
       const res = await fetch(`${apiBase}/api/rentals`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           tool_id: bookingTool.id,
-          borrower_id: 'borrower_rahul',
-          borrower_name: borrowerName,
-          borrower_phone: borrowerPhone,
+          borrower_id: currentUser.email,
+          borrower_name: currentUser.full_name,
+          borrower_phone: currentUser.phone,
           start_date: startDate,
           end_date: endDate,
           payment_method: paymentMethod
@@ -448,46 +307,80 @@ export default function App() {
         const data = await res.json();
         setRentals((prev) => [data, ...prev]);
         setSelectedRentalId(data.id);
+        setBookingSuccess(true);
+        setTimeout(() => {
+          setBookingTool(null);
+          setBookingSuccess(null);
+          setActiveTab('rentals');
+        }, 1200);
       } else {
-        setRentals((prev) => [newBookingObj, ...prev]);
-        setSelectedRentalId(newBookingObj.id);
+        const err = await res.json();
+        setBookingError(err.detail || 'Failed to submit booking request.');
       }
     } catch {
-      setRentals((prev) => [newBookingObj, ...prev]);
-      setSelectedRentalId(newBookingObj.id);
+      setBookingError('Unable to connect to server. Please try again.');
     } finally {
-      setBookingSuccess(true);
-      setTimeout(() => {
-        setBookingTool(null);
-        setBookingSuccess(null);
-        setActiveTab('rentals');
-        setActionLoading(false);
-      }, 1400);
+      setActionLoading(false);
     }
   };
 
-  // Submit New Tool Form
+  // Handle Rental State Machine Actions (Accept, Pickup, Return)
+  const handleRentalAction = async (rentalId, actionEndpoint, payload = null) => {
+    setActionLoading(true);
+    try {
+      const res = await fetch(`${apiBase}/api/rentals/${rentalId}/${actionEndpoint}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: payload ? JSON.stringify(payload) : JSON.stringify({})
+      });
+      if (res.ok) {
+        await fetchRentals();
+      }
+    } catch (err) {
+      console.error('Action error:', err);
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  // Handle Listing a New Tool
   const handleAddNewTool = async (e) => {
     e.preventDefault();
-    if (!newToolTitle) return;
+    if (!currentUser) return;
+    setAddToolError('');
 
+    if (!newTitle.trim()) {
+      setAddToolError('Please enter a tool title.');
+      return;
+    }
+    if (!newDailyRate || parseFloat(newDailyRate) <= 0) {
+      setAddToolError('Please enter a valid daily rate.');
+      return;
+    }
+    if (!newDeposit || parseFloat(newDeposit) <= 0) {
+      setAddToolError('Please enter a replacement security deposit.');
+      return;
+    }
+
+    setAddingTool(true);
     const toolPayload = {
-      title: newToolTitle,
-      category: newToolCategory,
-      description: newToolDescription || "Available for neighbor tool sharing via BorrowLoop protocol.",
-      daily_rate: parseFloat(newToolDailyRate),
-      hourly_rate: Math.round(parseFloat(newToolDailyRate) / 6),
-      replacement_deposit: parseFloat(newToolDeposit),
-      condition: "Excellent",
-      image_url: "https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=700&q=80",
-      locality: newToolLocality,
-      pincode: newToolPincode,
+      title: newTitle.trim(),
+      category: newCategory,
+      description: newDescription.trim() || 'Available for hyperlocal neighbor sharing with BorrowLoop escrow protection.',
+      daily_rate: parseFloat(newDailyRate),
+      hourly_rate: newHourlyRate ? parseFloat(newHourlyRate) : Math.round(parseFloat(newDailyRate) / 6),
+      replacement_deposit: parseFloat(newDeposit),
+      condition: newCondition,
+      image_url: newImageUrl.trim() || 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=700&q=80',
+      owner_id: currentUser.email,
+      owner_name: currentUser.full_name,
+      owner_phone: currentUser.phone,
+      house_flat_no: newHouseFlat.trim() || 'Address on file',
+      building_street: newStreet.trim() || 'Main Street',
+      locality: newLocality.trim() || currentUser.locality || 'Locality',
+      pincode: newPincode.trim() || currentUser.pincode || '695001',
       latitude: 8.5241,
-      longitude: 76.9366,
-      owner_name: newToolOwnerName,
-      owner_phone: newToolOwnerPhone,
-      house_flat_no: "Flat 4B, Royal Palms",
-      building_street: "Main Avenue"
+      longitude: 76.9366
     };
 
     try {
@@ -498,36 +391,177 @@ export default function App() {
       });
       if (res.ok) {
         await fetchTools();
+        setShowAddToolModal(false);
+        // Reset fields
+        setNewTitle('');
+        setNewDescription('');
+        setNewDailyRate('');
+        setNewHourlyRate('');
+        setNewDeposit('');
+        setNewImageUrl('');
+        setNewHouseFlat('');
+        setNewStreet('');
+      } else {
+        const err = await res.json();
+        setAddToolError(err.detail || 'Failed to list tool.');
       }
     } catch {
-      // client add
-      setTools((prev) => [
-        {
-          id: Date.now(),
-          ...toolPayload,
-          approx_location: `${newToolLocality}, Pincode ${newToolPincode}`,
-          approx_distance_km: 0.9,
-          distance_label: `0.9 km away in Pincode ${newToolPincode}`,
-          owner_display_name: `${newToolOwnerName.split(' ')[0]} (Verified Neighbor)`,
-          owner_phone_masked: "+91 98*** 12345",
-          is_available: true
-        },
-        ...prev
-      ]);
+      setAddToolError('Connection error while listing tool.');
+    } finally {
+      setAddingTool(false);
     }
-
-    setShowAddToolModal(false);
-    setNewToolTitle('');
-    setActiveTab('explore');
   };
 
-  const selectedRental = rentals.find((r) => r.id === selectedRentalId) || rentals[0];
-
-  const filteredRentals = rentals.filter((r) => {
-    if (rentalFilter === 'ALL') return true;
-    return r.status === rentalFilter;
+  // Filtered rentals based on role
+  const displayedRentals = rentals.filter((r) => {
+    if (!currentUser) return false;
+    if (rentalRoleFilter === 'BORROWED') {
+      return r.borrower_id?.toLowerCase() === currentUser.email?.toLowerCase();
+    }
+    if (rentalRoleFilter === 'OWNED') {
+      return r.owner_id?.toLowerCase() === currentUser.email?.toLowerCase();
+    }
+    return true;
   });
 
+  const activeRental = rentals.find((r) => r.id === selectedRentalId) || displayedRentals[0] || null;
+
+  // -------------------------------------------------------------
+  // RENDER: AUTHENTICATION SCREEN IF NOT LOGGED IN
+  // -------------------------------------------------------------
+  if (!currentUser) {
+    return (
+      <div style={styles.authContainer}>
+        <div className="glass-card animate-fade-in" style={styles.authCard}>
+          <div style={styles.authHeader}>
+            <div style={styles.authLogoIcon}>
+              <Repeat size={32} color="#fff" />
+            </div>
+            <h1 style={styles.authTitle}>BorrowLoop</h1>
+            <p style={styles.authSub}>Hyperlocal Tool Exchange & Escrow Handover</p>
+          </div>
+
+          <div style={styles.authIntroBox}>
+            <ShieldCheck size={20} color="#2dd4bf" />
+            <span style={{ fontSize: 13, color: '#e2e8f0', lineHeight: 1.4 }}>
+              Sign in with your email to borrow equipment from neighbors or list your tools to earn extra income securely.
+            </span>
+          </div>
+
+          {authError && (
+            <div style={styles.errorBox}>
+              <AlertCircle size={16} color="#ef4444" />
+              <span>{authError}</span>
+            </div>
+          )}
+
+          <form onSubmit={handleAuthSubmit} style={styles.authForm}>
+            <div style={styles.fieldGroup}>
+              <label style={styles.fieldLabel}>
+                <Mail size={14} color="#0d9488" /> Email Address (Required)
+              </label>
+              <input 
+                type="email"
+                placeholder="name@example.com"
+                value={authEmail}
+                onChange={(e) => setAuthEmail(e.target.value)}
+                required
+                autoFocus
+                style={styles.fieldInput}
+              />
+            </div>
+
+            <div style={styles.fieldGroup}>
+              <label style={styles.fieldLabel}>
+                <User size={14} color="#0d9488" /> Your Full Name (Required)
+              </label>
+              <input 
+                type="text"
+                placeholder="e.g. Anand Nair or Priya Menon"
+                value={authFullName}
+                onChange={(e) => setAuthFullName(e.target.value)}
+                required
+                style={styles.fieldInput}
+              />
+            </div>
+
+            <div style={styles.fieldGroup}>
+              <label style={styles.fieldLabel}>
+                <Phone size={14} color="#0d9488" /> Phone Number (For Handover Calls & WhatsApp)
+              </label>
+              <input 
+                type="tel"
+                placeholder="+91 98471 23456"
+                value={authPhone}
+                onChange={(e) => setAuthPhone(e.target.value)}
+                required
+                style={styles.fieldInput}
+              />
+              <span style={{ fontSize: 11, color: '#64748b' }}>
+                🔒 Your phone number is masked until an equipment booking is confirmed.
+              </span>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+              <div style={styles.fieldGroup}>
+                <label style={styles.fieldLabel}>Locality / Area</label>
+                <input 
+                  type="text"
+                  placeholder="e.g. Kowdiar"
+                  value={authLocality}
+                  onChange={(e) => setAuthLocality(e.target.value)}
+                  style={styles.fieldInput}
+                />
+              </div>
+              <div style={styles.fieldGroup}>
+                <label style={styles.fieldLabel}>Pincode</label>
+                <input 
+                  type="text"
+                  placeholder="e.g. 695003"
+                  value={authPincode}
+                  onChange={(e) => setAuthPincode(e.target.value)}
+                  style={styles.fieldInput}
+                />
+              </div>
+            </div>
+
+            <div style={styles.fieldGroup}>
+              <label style={styles.fieldLabel}>UPI ID (For Rental Payments / Security Deposit Return)</label>
+              <input 
+                type="text"
+                placeholder="e.g. yourname@okaxis"
+                value={authUpiId}
+                onChange={(e) => setAuthUpiId(e.target.value)}
+                style={styles.fieldInput}
+              />
+            </div>
+
+            <button 
+              type="submit" 
+              className="btn-primary" 
+              disabled={authLoading}
+              style={{ ...styles.submitBtn, marginTop: 12 }}
+            >
+              {authLoading ? (
+                <>
+                  <RefreshCw size={16} className="animate-spin" />
+                  Authenticating...
+                </>
+              ) : (
+                <>
+                  Continue to BorrowLoop <ArrowRight size={16} />
+                </>
+              )}
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  // -------------------------------------------------------------
+  // RENDER: MAIN APPLICATION (LOGGED IN USER)
+  // -------------------------------------------------------------
   return (
     <div className="app-viewport">
       {/* ================= WEBSITE HEADER ================= */}
@@ -537,173 +571,77 @@ export default function App() {
             <Repeat size={24} color="#fff" />
           </div>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <h1 style={styles.logoTitle}>BorrowLoop</h1>
-              <span style={styles.apkTag}>Universal Web + APK</span>
-            </div>
-            <p style={styles.logoSub}>Hyperlocal Tool Exchange & Escrow Handover Protocol</p>
+            <h1 style={styles.logoTitle}>BorrowLoop</h1>
+            <p style={styles.logoSub}>Hyperlocal Tool Exchange & Escrow Handover</p>
           </div>
         </div>
 
-        {/* Server Status & Role Switcher */}
+        {/* User Profile & Logout */}
         <div style={styles.headerControls}>
-          <button 
-            onClick={() => setShowSettings(!showSettings)} 
-            style={serverOnline ? styles.serverOnlineBtn : styles.serverOfflineBtn}
-            title="Configure Backend Server URL for Mobile Wi-Fi testing"
-          >
-            <span style={{
-              width: 8, height: 8, borderRadius: '50%',
-              background: serverOnline ? '#10b981' : '#ef4444'
-            }}></span>
-            <span>{serverOnline ? 'FastAPI Connected' : 'Standalone Mode'}</span>
-            <Settings size={13} style={{ marginLeft: 3 }} />
-          </button>
-
-          <div style={styles.roleToggleContainer}>
-            <button
-              onClick={() => setUserRole('BORROWER')}
-              style={userRole === 'BORROWER' ? styles.roleActiveBtn : styles.roleInactiveBtn}
-            >
-              <UserCheck size={13} />
-              Borrower View
-            </button>
-            <button
-              onClick={() => setUserRole('OWNER')}
-              style={userRole === 'OWNER' ? styles.roleActiveBtn : styles.roleInactiveBtn}
-            >
-              <Wrench size={13} />
-              Lender View
-            </button>
+          <div style={styles.userProfilePill} title={`Logged in as ${currentUser.email}`}>
+            <UserCheck size={14} color="#2dd4bf" />
+            <div style={{ textAlign: 'left', lineHeight: 1.2 }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: '#f8fafc' }}>
+                {currentUser.full_name}
+              </div>
+              <div style={{ fontSize: 11, color: '#94a3b8' }}>
+                {currentUser.email}
+              </div>
+            </div>
           </div>
+
+          <button 
+            onClick={handleLogout}
+            style={styles.logoutBtn}
+            title="Sign out of BorrowLoop"
+          >
+            <LogOut size={14} />
+            <span className="hidden-mobile">Sign Out</span>
+          </button>
         </div>
       </header>
 
-      {/* Backend Settings Dialog */}
-      {showSettings && (
-        <div className="glass-card animate-fade-in" style={styles.settingsModal}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-            <h4 style={{ margin: 0, fontSize: 15, display: 'flex', alignItems: 'center', gap: 6 }}>
-              <Settings size={16} color="#0d9488" />
-              API Server & Wi-Fi Connection
-            </h4>
-            <button onClick={() => setShowSettings(false)} style={styles.closeBtn}>✕</button>
-          </div>
-          <p style={{ fontSize: 13, color: '#94a3b8', marginBottom: 12 }}>
-            When testing on an Android phone over local Wi-Fi, point to your computer's IP (e.g. <code>http://192.168.1.15:8000</code>). On desktop or emulator, use <code>http://localhost:8000</code>.
-          </p>
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-            <input
-              type="text"
-              value={customApiUrl}
-              onChange={(e) => setCustomApiUrl(e.target.value)}
-              placeholder="http://192.168.x.x:8000"
-              style={{ flex: 1, minWidth: 220 }}
-            />
-            <button
-              className="btn-primary"
-              onClick={() => {
-                setApiBase(customApiUrl);
-                localStorage.setItem('borrowloop_api_base', customApiUrl);
-                checkHealth(customApiUrl);
-                setShowSettings(false);
-              }}
-            >
-              Save & Test
-            </button>
-            <button
-              className="btn-secondary"
-              onClick={() => {
-                const def = (typeof window !== 'undefined' && window.location.protocol.startsWith('http') && window.location.port !== '5173')
-                  ? window.location.origin
-                  : 'http://localhost:8000';
-                setCustomApiUrl(def);
-                setApiBase(def);
-                localStorage.removeItem('borrowloop_api_base');
-                checkHealth(def);
-                setShowSettings(false);
-              }}
-            >
-              Reset Default
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* ================= HIGH-IMPACT WEBSITE HERO BANNER ================= */}
+      {/* ================= HIGH-IMPACT HERO BANNER ================= */}
       {activeTab === 'explore' && (
         <div className="glass-card" style={styles.heroBanner}>
           <div style={{ maxWidth: 640 }}>
             <div style={styles.heroPill}>
               <ShieldCheck size={14} color="#2dd4bf" />
-              <span>Hyperlocal Equipment Sharing Protocol</span>
+              <span>Hyperlocal Community Tool Exchange</span>
             </div>
             <h2 style={styles.heroHeadline}>
               Borrow from Neighbors.<br />Don’t Buy for One Project.
             </h2>
             <p style={styles.heroParagraph}>
-              Demand-first tool exchange with Python Haversine geospatial proximity, two-way privacy contact shielding, and automated security deposit collateral escrow.
+              Hyperlocal equipment exchange with geospatial proximity matching, two-way privacy contact shielding, and upfront security deposit collateral held in escrow.
             </p>
 
-            {/* Live Metrics Ribbon */}
-            <div style={styles.metricsGrid}>
-              <div style={styles.metricItem}>
-                <strong style={styles.metricValue}>&lt; 1.2 km</strong>
-                <span style={styles.metricLabel}>Avg Neighbor Radius</span>
-              </div>
-              <div style={styles.metricItem}>
-                <strong style={{ ...styles.metricValue, color: '#10b981' }}>100%</strong>
-                <span style={styles.metricLabel}>Collateral Escrow Hold</span>
-              </div>
-              <div style={styles.metricItem}>
-                <strong style={{ ...styles.metricValue, color: '#38bdf8' }}>Two-Way</strong>
-                <span style={styles.metricLabel}>Privacy Contact Mask</span>
-              </div>
-              <div style={styles.metricItem}>
-                <strong style={{ ...styles.metricValue, color: '#f59e0b' }}>4.2 MB</strong>
-                <span style={styles.metricLabel}>Standalone Android APK</span>
-              </div>
-            </div>
-
             <div style={{ display: 'flex', gap: 10, marginTop: 18, flexWrap: 'wrap' }}>
-              <button className="btn-primary" onClick={() => setActiveTab('explore')}>
-                <Search size={16} />
-                Explore {tools.length}+ Tools
-              </button>
-              <button className="btn-secondary" onClick={() => setShowAddToolModal(true)}>
+              <button className="btn-primary" onClick={() => setShowAddToolModal(true)}>
                 <PlusCircle size={16} />
-                List a Tool (Earn Extra)
+                List Your Tool (Earn Extra)
               </button>
               <button 
                 className="btn-secondary" 
-                style={{ borderColor: 'rgba(13, 148, 136, 0.4)' }}
-                onClick={() => setActiveTab('apk')}
+                onClick={() => setActiveTab('rentals')}
               >
-                <Smartphone size={16} color="#2dd4bf" />
-                Download Android APK
+                <Repeat size={16} />
+                View Handover Tracker ({rentals.length})
               </button>
+              {!isMobileApp && (
+                <button 
+                  className="btn-secondary" 
+                  style={{ borderColor: 'rgba(13, 148, 136, 0.4)' }}
+                  onClick={() => setActiveTab('apk')}
+                >
+                  <Smartphone size={16} color="#2dd4bf" />
+                  Get Android App
+                </button>
+              )}
             </div>
           </div>
         </div>
       )}
-
-      {/* Role explanation banner */}
-      <div style={styles.roleBanner(userRole)}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <Sparkles size={16} color={userRole === 'BORROWER' ? '#38bdf8' : '#34d399'} />
-          <span style={{ fontSize: 13, fontWeight: 500 }}>
-            {userRole === 'BORROWER' 
-              ? '👤 Currently viewing as Borrower (Rahul Varma). Browse nearby tools, request rental, and pay deposit collateral.'
-              : '🛠️ Currently viewing as Tool Owner (Anand Nair). Accept requests to unmask your address, confirm deposit pickup, and inspect returns.'}
-          </span>
-        </div>
-        <button 
-          onClick={() => setUserRole(userRole === 'BORROWER' ? 'OWNER' : 'BORROWER')}
-          style={styles.switchRoleInlineBtn}
-        >
-          Toggle to {userRole === 'BORROWER' ? 'Owner View' : 'Borrower View'}
-        </button>
-      </div>
 
       {/* Desktop Navigation Tabs */}
       <nav style={styles.desktopTabNav}>
@@ -729,54 +667,42 @@ export default function App() {
           <PlusCircle size={16} />
           List Your Tool
         </button>
-        <button
-          onClick={() => setActiveTab('apk')}
-          style={activeTab === 'apk' ? styles.tabActive : styles.tabInactive}
-        >
-          <Smartphone size={16} />
-          Android APK Hub
-          {apkStatus?.is_compiled && (
-            <span style={{ ...styles.tabBadge, background: '#10b981' }}>Ready</span>
-          )}
-        </button>
+        {!isMobileApp && (
+          <button
+            onClick={() => setActiveTab('apk')}
+            style={activeTab === 'apk' ? styles.tabActive : styles.tabInactive}
+          >
+            <Smartphone size={16} />
+            Android APK Hub
+          </button>
+        )}
       </nav>
 
       {/* ================= TAB 1: EXPLORE TOOLS ================= */}
       {activeTab === 'explore' && (
-        <section className="animate-fade-in">
-          {/* Search & Demand-First Filters Card */}
-          <div className="glass-card" style={styles.searchBarCard}>
+        <section style={{ marginTop: 20 }}>
+          {/* Search & Category Filter Controls */}
+          <div className="glass-card" style={styles.filterCard}>
             <div style={styles.searchRow}>
               <div style={styles.searchInputWrap}>
-                <Search size={18} color="#94a3b8" style={{ marginLeft: 12 }} />
-                <input
+                <Search size={18} color="#94a3b8" />
+                <input 
                   type="text"
-                  placeholder="Demand search: hammer drill, saw, pressure washer..."
+                  placeholder="Search tools by title, brand, or purpose (e.g. drill, saw, ladder)..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  style={styles.mainSearchInput}
+                  style={styles.searchBox}
                 />
-                {searchQuery && (
-                  <button onClick={() => setSearchQuery('')} style={styles.clearSearchBtn}>✕</button>
-                )}
               </div>
-
-              {/* Pincode Proximity Filter */}
-              <div style={styles.pincodeSelectWrap}>
+              <div style={styles.pincodeInputWrap}>
                 <MapPin size={16} color="#0d9488" />
-                <select 
-                  value={selectedPincode} 
+                <input 
+                  type="text"
+                  placeholder="Pincode (e.g. 695003)"
+                  value={selectedPincode}
                   onChange={(e) => setSelectedPincode(e.target.value)}
-                  style={styles.pincodeSelect}
-                >
-                  <option value="">All Nearby Neighborhoods</option>
-                  <option value="695001">Pincode 695001 (Statue / Center)</option>
-                  <option value="695003">Pincode 695003 (Kowdiar)</option>
-                  <option value="695011">Pincode 695011 (Pattom)</option>
-                  <option value="695014">Pincode 695014 (Sasthamangalam)</option>
-                  <option value="695004">Pincode 695004 (Vazhuthacaud)</option>
-                  <option value="695033">Pincode 695033 (Technopark)</option>
-                </select>
+                  style={styles.pincodeBox}
+                />
               </div>
             </div>
 
@@ -786,7 +712,7 @@ export default function App() {
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
-                  style={selectedCategory === cat ? styles.categoryPillActive : styles.categoryPill}
+                  style={selectedCategory === cat ? styles.categoryPillActive : styles.categoryPillInactive}
                 >
                   {cat}
                 </button>
@@ -795,581 +721,395 @@ export default function App() {
           </div>
 
           {/* Tools Grid */}
-          <div style={{ marginTop: 24, marginBottom: 14, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <h3 style={{ fontSize: 18, color: '#f8fafc', display: 'flex', alignItems: 'center', gap: 8 }}>
-              <ShieldCheck size={20} color="#0d9488" />
-              Verified Equipment Near You ({tools.length})
-            </h3>
-            <span style={{ fontSize: 12, color: '#94a3b8' }}>
-              Haversine Proximity Sorted
-            </span>
-          </div>
-
-          {loadingTools ? (
-            <div style={styles.emptyContainer}>
-              <RefreshCw size={28} className="animate-spin" color="#0d9488" />
-              <p style={{ marginTop: 12, color: '#94a3b8' }}>Calculating proximity distances...</p>
-            </div>
-          ) : tools.length === 0 ? (
-            <div className="glass-card" style={styles.emptyContainer}>
-              <Box size={40} color="#64748b" />
-              <h4 style={{ marginTop: 12 }}>No tools found matching your search</h4>
-              <p style={{ color: '#94a3b8', fontSize: 14 }}>Try clearing the search query or selecting another category.</p>
+          <div style={{ marginTop: 24 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+              <h3 style={{ fontSize: 18, color: '#f8fafc', display: 'flex', alignItems: 'center', gap: 8 }}>
+                Available Neighborhood Tools 
+                <span style={{ fontSize: 13, color: '#94a3b8', fontWeight: 400 }}>({tools.length} found)</span>
+              </h3>
               <button 
-                className="btn-primary" 
-                style={{ marginTop: 16 }}
-                onClick={() => { setSearchQuery(''); setSelectedCategory('All'); setSelectedPincode(''); }}
+                className="btn-secondary" 
+                onClick={fetchTools} 
+                disabled={loadingTools}
+                style={{ fontSize: 12, padding: '6px 12px' }}
               >
-                Reset Filters
+                <RefreshCw size={13} className={loadingTools ? 'animate-spin' : ''} />
+                Refresh
               </button>
             </div>
-          ) : (
-            <div className="tools-grid">
-              {tools.map((tool) => (
-                <div key={tool.id} className="glass-card" style={styles.toolCard}>
-                  {/* Tool Image with Overlays */}
-                  <div style={styles.imageWrap}>
-                    <img
-                      src={tool.image_url || 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=700&q=80'}
-                      alt={tool.title}
-                      style={styles.toolImg}
-                      loading="lazy"
-                    />
-                    <div style={styles.imageBadgeOverlay}>
-                      <span className="badge badge-distance">
-                        <MapPin size={11} /> {tool.distance_label || `${tool.approx_distance_km || 0.8} km away`}
-                      </span>
-                      <span style={styles.categoryBadge}>{tool.category}</span>
-                    </div>
-                  </div>
 
-                  {/* Card Content */}
-                  <div style={styles.cardContent}>
-                    <h4 style={styles.toolTitle}>{tool.title}</h4>
-                    <p style={styles.toolDesc}>{tool.description}</p>
-
-                    {/* Rates & Security Deposit */}
-                    <div style={styles.pricingBox}>
-                      <div>
-                        <div style={styles.priceLabel}>Daily Rate</div>
-                        <div style={styles.priceValue}>₹{tool.daily_rate}<span style={{ fontSize: 12, color: '#94a3b8' }}>/day</span></div>
-                        {tool.hourly_rate && (
-                          <div style={{ fontSize: 11, color: '#94a3b8' }}>₹{tool.hourly_rate}/hr</div>
+            {tools.length === 0 ? (
+              <div className="glass-card" style={styles.emptyStateCard}>
+                <div style={styles.emptyIconCircle}>
+                  <Wrench size={36} color="#0d9488" />
+                </div>
+                <h4 style={{ fontSize: 18, color: '#f8fafc', marginBottom: 8 }}>
+                  No tools listed yet in this area
+                </h4>
+                <p style={{ fontSize: 14, color: '#94a3b8', maxWidth: 460, margin: '0 auto 20px', lineHeight: 1.5 }}>
+                  Be the first neighbor to list tools or equipment from your garage or shed and start earning rental income securely with escrow protection.
+                </p>
+                <button className="btn-primary" onClick={() => setShowAddToolModal(true)}>
+                  <PlusCircle size={16} />
+                  List Your First Tool
+                </button>
+              </div>
+            ) : (
+              <div className="tools-grid">
+                {tools.map((tool) => {
+                  const isMyTool = tool.owner_id?.toLowerCase() === currentUser.email?.toLowerCase();
+                  return (
+                    <div key={tool.id} className="glass-card" style={styles.toolCard}>
+                      <div style={styles.toolImageWrap}>
+                        <img 
+                          src={tool.image_url || 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=700&q=80'}
+                          alt={tool.title}
+                          style={styles.toolImage}
+                          onError={(e) => {
+                            e.target.src = 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=700&q=80';
+                          }}
+                        />
+                        <span style={styles.categoryBadge}>{tool.category}</span>
+                        {isMyTool && (
+                          <span style={styles.myToolBadge}>Your Listing</span>
                         )}
                       </div>
-                      <div style={{ textAlign: 'right' }}>
-                        <div style={styles.priceLabel}>Replacement Collateral</div>
-                        <div style={styles.depositValue}>₹{tool.replacement_deposit}</div>
-                        <div style={{ fontSize: 11, color: '#10b981' }}>100% Refundable Hold</div>
+
+                      <div style={styles.toolCardBody}>
+                        <h4 style={styles.toolTitle}>{tool.title}</h4>
+                        <p style={styles.toolDesc}>{tool.description}</p>
+
+                        {/* Location & Masked Phone */}
+                        <div style={styles.metaRow}>
+                          <span style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#2dd4bf', fontSize: 12 }}>
+                            <MapPin size={13} />
+                            {tool.distance_label || tool.approx_location}
+                          </span>
+                        </div>
+
+                        {/* Financial Ledger (Rates & Upfront Escrow Deposit) */}
+                        <div style={styles.priceRow}>
+                          <div>
+                            <div style={styles.dailyPrice}>
+                              ₹{tool.daily_rate} <span style={{ fontSize: 12, color: '#94a3b8' }}>/day</span>
+                            </div>
+                            {tool.hourly_rate && (
+                              <div style={{ fontSize: 11, color: '#94a3b8' }}>
+                                ₹{tool.hourly_rate}/hour
+                              </div>
+                            )}
+                          </div>
+                          <div style={{ textAlign: 'right' }}>
+                            <div style={{ fontSize: 11, color: '#94a3b8' }}>Security Escrow</div>
+                            <div style={styles.depositPrice}>₹{tool.replacement_deposit}</div>
+                          </div>
+                        </div>
+
+                        {/* Two-Way Privacy Notice */}
+                        <div style={styles.privacyLockNotice}>
+                          <Lock size={12} color="#f59e0b" />
+                          <span>Address & contact locked until booking accepted</span>
+                        </div>
+
+                        {/* Action Button */}
+                        <div style={{ marginTop: 14 }}>
+                          {isMyTool ? (
+                            <button 
+                              className="btn-secondary" 
+                              style={{ width: '100%', opacity: 0.8, cursor: 'default' }}
+                              disabled
+                            >
+                              <CheckCircle2 size={15} color="#10b981" />
+                              You Own This Tool
+                            </button>
+                          ) : (
+                            <button
+                              className="btn-primary"
+                              style={{ width: '100%' }}
+                              onClick={() => {
+                                setBookingTool(tool);
+                                setBookingError('');
+                              }}
+                            >
+                              <Wrench size={15} />
+                              Request to Borrow
+                            </button>
+                          )}
+                        </div>
                       </div>
                     </div>
-
-                    {/* Privacy Shield Box */}
-                    <div style={styles.privacyShieldBox}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                        <Lock size={13} color="#f59e0b" />
-                        <span style={styles.privacyText}>
-                          {tool.owner_display_name || 'Verified Neighbor'} • {tool.owner_phone_masked || '+91 98*** 12345'}
-                        </span>
-                      </div>
-                      <div style={styles.approxLocation}>
-                        📍 {tool.approx_location}
-                      </div>
-                      <div style={styles.privacyNote}>
-                        🔒 Street address & phone unlock upon lender acceptance
-                      </div>
-                    </div>
-
-                    {/* Rent Action Button */}
-                    <button
-                      className="btn-primary"
-                      style={{ width: '100%', marginTop: 14 }}
-                      onClick={() => setBookingTool(tool)}
-                    >
-                      <span>Request to Rent</span>
-                      <ArrowRight size={16} />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* "How the Handover Protocol Works" Interactive Visual Guide */}
-          <div className="glass-card" style={styles.howItWorksCard}>
-            <h3 style={{ fontSize: 20, marginBottom: 16, textAlign: 'center' }}>
-              How the BorrowLoop Handover Protocol Works
-            </h3>
-
-            <div style={styles.protocolGrid}>
-              <div style={styles.protocolCard}>
-                <div style={styles.protocolNumber}>1</div>
-                <h4 style={styles.protocolTitle}>Demand Search</h4>
-                <p style={styles.protocolDesc}>
-                  Borrowers search needed equipment. Proximity is computed via Python Haversine formula against pincodes.
-                </p>
+                  );
+                })}
               </div>
-
-              <div style={styles.protocolCard}>
-                <div style={styles.protocolNumber}>2</div>
-                <h4 style={styles.protocolTitle}>Privacy Shield</h4>
-                <p style={styles.protocolDesc}>
-                  Addresses and contact phone numbers are cryptographically masked to protect neighbor privacy.
-                </p>
-              </div>
-
-              <div style={styles.protocolCard}>
-                <div style={styles.protocolNumber}>3</div>
-                <h4 style={styles.protocolTitle}>Accept & Unmask</h4>
-                <p style={styles.protocolDesc}>
-                  Lender accepts booking. Direct phone call, WhatsApp, exact address, and Google Maps instantly unlock.
-                </p>
-              </div>
-
-              <div style={styles.protocolCard}>
-                <div style={styles.protocolNumber}>4</div>
-                <h4 style={styles.protocolTitle}>Deposit Escrow</h4>
-                <p style={styles.protocolDesc}>
-                  Full replacement collateral is held. Returned immediately upon undamaged tool handover.
-                </p>
-              </div>
-            </div>
+            )}
           </div>
         </section>
       )}
 
-      {/* ================= TAB 2: RENTAL ESCROWS & HANDOVER ================= */}
+      {/* ================= TAB 2: ESCROW & HANDOVER TRACKER ================= */}
       {activeTab === 'rentals' && (
-        <section className="animate-fade-in">
-          {/* Header & Filter Controls */}
-          <div style={styles.rentalsHeaderRow}>
+        <section style={{ marginTop: 20 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
             <div>
-              <h3 style={{ fontSize: 20, margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
-                <Repeat size={20} color="#0d9488" />
-                Live Handover Protocol & Escrow
+              <h3 style={{ fontSize: 20, color: '#f8fafc', margin: 0 }}>
+                Escrow & Handover Tracker
               </h3>
-              <p style={{ color: '#94a3b8', fontSize: 13, marginTop: 4 }}>
-                Two-Way Masking, Lender Acceptance Trigger, and Deposit Collateral Settlement
+              <p style={{ fontSize: 13, color: '#94a3b8', margin: '4px 0 0 0' }}>
+                Two-way contact unmasking, handover milestone verification, and security deposit escrow ledger.
               </p>
             </div>
 
-            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-              <button 
-                onClick={fetchRentals} 
-                style={styles.refreshIconBtn}
-                title="Refresh rentals"
-              >
-                <RefreshCw size={14} color="#94a3b8" />
-              </button>
-            </div>
-          </div>
-
-          {/* Status Filter Buttons */}
-          <div style={styles.statusFiltersWrap}>
-            {['ALL', 'REQUESTED', 'ACCEPTED', 'ACTIVE_RENTAL', 'COMPLETED'].map((st) => (
+            {/* Role Filter: Borrowed vs Owned */}
+            <div style={styles.roleToggleContainer}>
               <button
-                key={st}
-                onClick={() => setRentalFilter(st)}
-                style={rentalFilter === st ? styles.filterBtnActive : styles.filterBtn}
+                onClick={() => setRentalRoleFilter('ALL')}
+                style={rentalRoleFilter === 'ALL' ? styles.roleActiveBtn : styles.roleInactiveBtn}
               >
-                {st.replace('_', ' ')}
-                <span style={styles.filterCountBadge}>
-                  {st === 'ALL' ? rentals.length : rentals.filter((r) => r.status === st).length}
-                </span>
+                All ({rentals.length})
               </button>
-            ))}
+              <button
+                onClick={() => setRentalRoleFilter('BORROWED')}
+                style={rentalRoleFilter === 'BORROWED' ? styles.roleActiveBtn : styles.roleInactiveBtn}
+              >
+                Borrowed by Me
+              </button>
+              <button
+                onClick={() => setRentalRoleFilter('OWNED')}
+                style={rentalRoleFilter === 'OWNED' ? styles.roleActiveBtn : styles.roleInactiveBtn}
+              >
+                Requests for My Tools
+              </button>
+            </div>
           </div>
 
-          {filteredRentals.length === 0 ? (
-            <div className="glass-card" style={styles.emptyContainer}>
-              <Repeat size={44} color="#64748b" />
-              <h4 style={{ marginTop: 12 }}>No rentals in this state</h4>
-              <p style={{ color: '#94a3b8', fontSize: 14 }}>
-                Request a tool from the "Explore Tools" tab or reset the filter.
+          {displayedRentals.length === 0 ? (
+            <div className="glass-card" style={styles.emptyStateCard}>
+              <div style={styles.emptyIconCircle}>
+                <Repeat size={36} color="#0d9488" />
+              </div>
+              <h4 style={{ fontSize: 18, color: '#f8fafc', marginBottom: 8 }}>
+                No active rentals found
+              </h4>
+              <p style={{ fontSize: 14, color: '#94a3b8', maxWidth: 440, margin: '0 auto 20px', lineHeight: 1.5 }}>
+                {rentalRoleFilter === 'BORROWED' 
+                  ? "You haven't requested to borrow any equipment yet. Browse available tools to book one!"
+                  : rentalRoleFilter === 'OWNED'
+                  ? "No requests have been made for your tools yet. List more equipment to reach more neighbors!"
+                  : "No rental bookings found. When you borrow or rent out tools, handover status and escrow tracking appear here."}
               </p>
-              <button 
-                className="btn-primary" 
-                style={{ marginTop: 16 }}
-                onClick={() => setRentalFilter('ALL')}
-              >
-                Show All Rentals
+              <button className="btn-primary" onClick={() => setActiveTab('explore')}>
+                <Search size={16} />
+                Explore Neighborhood Tools
               </button>
             </div>
           ) : (
-            <div style={styles.rentalsSplitLayout}>
+            <div style={styles.rentalsLayout}>
               {/* Left Column: Rentals List */}
               <div style={styles.rentalsListCol}>
-                {filteredRentals.map((r) => {
-                  const isSelected = selectedRental?.id === r.id;
+                {displayedRentals.map((r) => {
+                  const isSelected = r.id === activeRental?.id;
+                  const isBorrower = r.borrower_id?.toLowerCase() === currentUser.email?.toLowerCase();
                   return (
                     <div
                       key={r.id}
                       onClick={() => setSelectedRentalId(r.id)}
                       className="glass-card"
-                      style={isSelected ? styles.rentalItemCardActive : styles.rentalItemCard}
+                      style={isSelected ? styles.rentalCardSelected : styles.rentalCard}
                     >
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 6 }}>
-                        <span style={styles.rentalIdTag}>Booking #{r.id}</span>
-                        <span className={`badge ${
-                          r.status === 'COMPLETED' ? 'badge-completed' :
-                          r.status === 'ACTIVE_RENTAL' ? 'badge-active' :
-                          r.status === 'ACCEPTED' ? 'badge-accepted' : 'badge-requested'
-                        }`}>
-                          {r.status}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={styles.statusPill(r.status)}>
+                          {r.status.replace('_', ' ')}
+                        </span>
+                        <span style={{ fontSize: 11, color: isBorrower ? '#38bdf8' : '#34d399', fontWeight: 600 }}>
+                          {isBorrower ? '👤 Borrower' : '🛠️ Lender'}
                         </span>
                       </div>
 
-                      <h4 style={{ fontSize: 15, marginBottom: 4, color: '#f8fafc' }}>{r.tool_title}</h4>
+                      <h4 style={{ fontSize: 15, color: '#f8fafc', margin: '8px 0 4px' }}>
+                        {r.tool_title}
+                      </h4>
+                      <p style={{ fontSize: 12, color: '#94a3b8', margin: 0 }}>
+                        {isBorrower ? `Owner: ${r.owner_name}` : `Borrower: ${r.borrower_name}`}
+                      </p>
                       
-                      <div style={{ fontSize: 12, color: '#94a3b8', display: 'flex', gap: 12, marginTop: 4 }}>
-                        <span>Borrower: <strong style={{ color: '#e2e8f0' }}>{r.borrower_name}</strong></span>
-                        <span>Owner: <strong style={{ color: '#e2e8f0' }}>{r.owner_name}</strong></span>
-                      </div>
-
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 10, paddingTop: 8, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-                        <span style={{ fontSize: 12, color: '#cbd5e1' }}>
-                          Collateral: <strong style={{ color: '#f59e0b' }}>₹{r.security_deposit}</strong>
-                        </span>
-                        <span style={{ fontSize: 12, color: r.is_contact_unmasked ? '#10b981' : '#f59e0b', display: 'flex', alignItems: 'center', gap: 4 }}>
-                          {r.is_contact_unmasked ? <Unlock size={12} /> : <Lock size={12} />}
-                          {r.is_contact_unmasked ? 'Contact Unmasked' : 'Address Shielded'}
-                        </span>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 10, fontSize: 12, color: '#cbd5e1' }}>
+                        <span>₹{r.total_amount} (₹{r.security_deposit} Escrow)</span>
+                        <span>{r.duration_days} day(s)</span>
                       </div>
                     </div>
                   );
                 })}
               </div>
 
-              {/* Right Column: Detailed Rental Inspector & Handshake Actions */}
-              {selectedRental && (
-                <div style={styles.rentalDetailCol}>
-                  {/* Status & Lifecycle Stepper Card */}
-                  <div className="glass-card" style={styles.detailCard}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-                      <div>
-                        <span style={{ fontSize: 12, color: '#94a3b8' }}>Rental Protocol #{selectedRental.id}</span>
-                        <h3 style={{ fontSize: 18, margin: 0, marginTop: 2 }}>{selectedRental.tool_title}</h3>
-                      </div>
-                      <span className={`badge ${
-                        selectedRental.status === 'COMPLETED' ? 'badge-completed' :
-                        selectedRental.status === 'ACTIVE_RENTAL' ? 'badge-active' :
-                        selectedRental.status === 'ACCEPTED' ? 'badge-accepted' : 'badge-requested'
-                      }`}>
-                        {selectedRental.status}
+              {/* Right Column: Active Rental Detailed Handover & Escrow Console */}
+              {activeRental && (
+                <div className="glass-card" style={styles.rentalDetailCard}>
+                  {/* Status Banner */}
+                  <div style={styles.detailHeader}>
+                    <div>
+                      <span style={styles.statusPill(activeRental.status)}>
+                        {activeRental.status.replace('_', ' ')}
                       </span>
+                      <h3 style={{ fontSize: 20, color: '#f8fafc', margin: '10px 0 4px' }}>
+                        {activeRental.tool_title}
+                      </h3>
+                      <p style={{ fontSize: 13, color: '#94a3b8', margin: 0 }}>
+                        Booking ID #{activeRental.id} • {activeRental.duration_days} Day(s) • {activeRental.start_date} to {activeRental.end_date}
+                      </p>
                     </div>
 
-                    {/* Progress Stepper */}
-                    <div style={styles.stepperContainer}>
-                      {[
-                        { label: 'Requested', sub: 'Privacy Locked', done: true },
-                        { label: 'Accepted', sub: 'Contact Unmasked', done: ['ACCEPTED', 'ACTIVE_RENTAL', 'COMPLETED'].includes(selectedRental.status) },
-                        { label: 'Deposit Escrow', sub: 'Handed Over', done: ['ACTIVE_RENTAL', 'COMPLETED'].includes(selectedRental.status) },
-                        { label: 'Returned', sub: 'Refund Released', done: selectedRental.status === 'COMPLETED' }
-                      ].map((step, idx) => (
-                        <div key={idx} style={styles.stepperItem}>
-                          <div style={step.done ? styles.stepCircleActive : styles.stepCirclePending}>
-                            {step.done ? <Check size={14} color="#fff" /> : idx + 1}
-                          </div>
-                          <div style={styles.stepLabel}>{step.label}</div>
-                          <div style={styles.stepSub}>{step.sub}</div>
-                        </div>
-                      ))}
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontSize: 12, color: '#94a3b8' }}>Total Handover Escrow</div>
+                      <div style={{ fontSize: 22, fontWeight: 800, color: '#10b981' }}>
+                        ₹{activeRental.total_amount}
+                      </div>
+                      <div style={{ fontSize: 11, color: '#38bdf8' }}>
+                        (Rental: ₹{activeRental.rental_fee} + Deposit: ₹{activeRental.security_deposit})
+                      </div>
                     </div>
                   </div>
 
-                  {/* Financial & Collateral Escrow Card */}
-                  <div className="glass-card" style={styles.detailCard}>
-                    <h4 style={styles.sectionHeading}>
-                      <Shield size={16} color="#0d9488" />
-                      Financial Ledger & Security Deposit Collateral
-                    </h4>
-
-                    <div style={styles.ledgerGrid}>
-                      <div style={styles.ledgerItem}>
-                        <span style={styles.ledgerLabel}>Rental Duration</span>
-                        <strong style={styles.ledgerValue}>{selectedRental.duration_days} Day(s)</strong>
-                        <span style={{ fontSize: 11, color: '#94a3b8' }}>{selectedRental.start_date} to {selectedRental.end_date}</span>
-                      </div>
-                      <div style={styles.ledgerItem}>
-                        <span style={styles.ledgerLabel}>Rental Fee</span>
-                        <strong style={styles.ledgerValue}>₹{selectedRental.rental_fee}</strong>
-                        <span style={{ fontSize: 11, color: '#94a3b8' }}>₹{selectedRental.daily_rate}/day</span>
-                      </div>
-                      <div style={styles.ledgerItem}>
-                        <span style={styles.ledgerLabel}>Security Deposit Hold</span>
-                        <strong style={{ ...styles.ledgerValue, color: '#f59e0b' }}>₹{selectedRental.security_deposit}</strong>
-                        <span style={{ fontSize: 11, color: '#10b981' }}>Full replacement collateral</span>
-                      </div>
-                      <div style={styles.ledgerItem}>
-                        <span style={styles.ledgerLabel}>Total Upfront Escrow</span>
-                        <strong style={{ ...styles.ledgerValue, color: '#38bdf8' }}>₹{selectedRental.total_amount}</strong>
-                        <span style={{ fontSize: 11, color: '#94a3b8' }}>Payment Mode: {selectedRental.payment_method}</span>
-                      </div>
-                    </div>
-
-                    <div style={styles.escrowNotice}>
-                      <Info size={16} color="#0d9488" />
-                      <span style={{ fontSize: 12, color: '#cbd5e1' }}>
-                        The ₹{selectedRental.security_deposit} security deposit is held strictly as collateral. It is released back to the borrower the instant the owner inspects and confirms undamaged return.
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* TWO-WAY PRIVACY UNMASKING PANEL */}
-                  <div className="glass-card" style={styles.detailCard}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                      <h4 style={styles.sectionHeading}>
-                        {selectedRental.is_contact_unmasked ? (
-                          <Unlock size={16} color="#10b981" />
-                        ) : (
-                          <Lock size={16} color="#f59e0b" />
-                        )}
-                        Contact & Navigation Unmasking Panel
-                      </h4>
-                      <span className={`badge ${selectedRental.is_contact_unmasked ? 'badge-accepted' : 'badge-privacy'}`}>
-                        {selectedRental.is_contact_unmasked ? 'UNMASKED' : 'LOCKED'}
-                      </span>
-                    </div>
-
-                    {/* Pre-acceptance Masked View */}
-                    {!selectedRental.is_contact_unmasked ? (
-                      <div style={styles.privacyShieldState}>
-                        <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-                          <Lock size={24} color="#f59e0b" style={{ marginTop: 2, flexShrink: 0 }} />
-                          <div>
-                            <strong style={{ color: '#fbbf24', fontSize: 14 }}>
-                              Pre-Acceptance Privacy Shield Active
-                            </strong>
-                            <p style={{ fontSize: 13, color: '#94a3b8', marginTop: 4 }}>
-                              To prevent spam, stalking, or address harvesting, exact street address and personal contact phone numbers are cryptographically locked until the tool owner explicitly accepts the booking.
-                            </p>
-                            <div style={{ marginTop: 10, fontSize: 13 }}>
-                              <div><strong>Owner:</strong> {selectedRental.owner_name} (Verified Neighbor)</div>
-                              <div><strong>Phone:</strong> <span style={{ color: '#f59e0b' }}>🔒 Masked until owner accepts</span></div>
-                              <div><strong>Pickup Location:</strong> <span style={{ color: '#f59e0b' }}>🔒 Exact street address hidden</span></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      /* Post-acceptance Unmasked View */
-                      <div style={styles.unmaskedState} className="animate-fade-in">
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                          <CheckCircle2 size={18} color="#10b981" />
-                          <strong style={{ color: '#34d399', fontSize: 14 }}>
-                            Lender Acceptance Trigger Activated — All Details Unmasked!
+                  {/* TWO-WAY UNMASKING / CONTACT BOX */}
+                  <div style={styles.unmaskedSection}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
+                      {activeRental.is_contact_unmasked ? (
+                        <>
+                          <Unlock size={18} color="#10b981" />
+                          <strong style={{ fontSize: 15, color: '#10b981' }}>
+                            Handover Contact & Coordinates Unmasked
                           </strong>
-                        </div>
+                        </>
+                      ) : (
+                        <>
+                          <Lock size={18} color="#f59e0b" />
+                          <strong style={{ fontSize: 15, color: '#fbbf24' }}>
+                            Two-Way Privacy Shield Active
+                          </strong>
+                        </>
+                      )}
+                    </div>
 
-                        {/* Owner Contact info */}
-                        <div style={styles.contactRow}>
-                          <div style={{ flex: 1 }}>
-                            <div style={{ fontSize: 12, color: '#94a3b8' }}>Lender Contact:</div>
-                            <div style={{ fontSize: 15, fontWeight: 600, color: '#f8fafc' }}>
-                              {selectedRental.owner_name}
-                            </div>
-                            <div style={{ fontSize: 14, color: '#38bdf8', fontWeight: 600, marginTop: 2 }}>
-                              {selectedRental.owner_full_phone}
-                            </div>
+                    {activeRental.is_contact_unmasked ? (
+                      <div style={styles.unmaskedContentGrid}>
+                        {/* Lender Details for Borrower */}
+                        <div style={styles.contactCard}>
+                          <span style={{ fontSize: 11, textTransform: 'uppercase', color: '#94a3b8', fontWeight: 700 }}>
+                            Equipment Owner / Handover Location
+                          </span>
+                          <div style={{ fontSize: 15, fontWeight: 700, color: '#f8fafc', marginTop: 4 }}>
+                            {activeRental.owner_name}
+                          </div>
+                          <div style={{ fontSize: 13, color: '#cbd5e1', marginTop: 4 }}>
+                            📍 {activeRental.owner_exact_address || 'Exact address unmasked'}
+                          </div>
+                          <div style={{ fontSize: 13, color: '#2dd4bf', marginTop: 4 }}>
+                            📞 {activeRental.owner_full_phone}
                           </div>
 
-                          {/* Quick Actions: Direct Call & WhatsApp */}
-                          <div style={{ display: 'flex', gap: 8 }}>
-                            {selectedRental.owner_direct_call_url && (
-                              <a 
-                                href={selectedRental.owner_direct_call_url}
-                                style={styles.actionCallBtn}
-                                title="One-tap phone call"
-                              >
-                                <PhoneCall size={14} />
-                                Direct Call
+                          <div style={{ display: 'flex', gap: 8, marginTop: 12, flexWrap: 'wrap' }}>
+                            {activeRental.owner_direct_call_url && (
+                              <a href={activeRental.owner_direct_call_url} className="btn-primary" style={styles.actionBtnSm}>
+                                <PhoneCall size={14} /> Call Owner
                               </a>
                             )}
-                            {selectedRental.owner_whatsapp_url && (
-                              <a
-                                href={selectedRental.owner_whatsapp_url}
-                                target="_blank"
-                                rel="noreferrer"
-                                style={styles.actionWhatsAppBtn}
-                                title="One-tap WhatsApp trigger"
-                              >
-                                <MessageCircle size={14} />
-                                WhatsApp
+                            {activeRental.owner_whatsapp_url && (
+                              <a href={activeRental.owner_whatsapp_url} target="_blank" rel="noreferrer" className="btn-success" style={styles.actionBtnSm}>
+                                <MessageCircle size={14} /> WhatsApp
+                              </a>
+                            )}
+                            {activeRental.google_maps_nav_url && (
+                              <a href={activeRental.google_maps_nav_url} target="_blank" rel="noreferrer" className="btn-secondary" style={styles.actionBtnSm}>
+                                <Navigation size={14} /> Google Maps
                               </a>
                             )}
                           </div>
                         </div>
 
-                        {/* Exact Street Address & Google Maps */}
-                        <div style={styles.addressBox}>
-                          <div style={{ fontSize: 12, color: '#94a3b8', marginBottom: 4 }}>
-                            📍 Exact Pickup Address:
+                        {/* Borrower Details for Lender */}
+                        <div style={styles.contactCard}>
+                          <span style={{ fontSize: 11, textTransform: 'uppercase', color: '#94a3b8', fontWeight: 700 }}>
+                            Borrower Details
+                          </span>
+                          <div style={{ fontSize: 15, fontWeight: 700, color: '#f8fafc', marginTop: 4 }}>
+                            {activeRental.borrower_name}
                           </div>
-                          <div style={{ fontSize: 14, fontWeight: 600, color: '#f8fafc', lineHeight: 1.4 }}>
-                            {selectedRental.owner_exact_address || 'Belhaven Palace Road, Kowdiar, Pincode 695003'}
+                          <div style={{ fontSize: 13, color: '#2dd4bf', marginTop: 4 }}>
+                            📞 {activeRental.borrower_phone}
                           </div>
-
-                          {selectedRental.google_maps_nav_url && (
-                            <a
-                              href={selectedRental.google_maps_nav_url}
-                              target="_blank"
-                              rel="noreferrer"
-                              style={styles.mapsBtn}
-                            >
-                              <Navigation size={14} />
-                              Open Google Maps Direct Turn-by-Turn Navigation
-                              <ExternalLink size={12} />
-                            </a>
+                          {activeRental.borrower_whatsapp_url && (
+                            <div style={{ marginTop: 12 }}>
+                              <a href={activeRental.borrower_whatsapp_url} target="_blank" rel="noreferrer" className="btn-success" style={styles.actionBtnSm}>
+                                <MessageCircle size={14} /> WhatsApp Borrower
+                              </a>
+                            </div>
                           )}
                         </div>
                       </div>
+                    ) : (
+                      <p style={{ fontSize: 13, color: '#94a3b8', margin: 0, lineHeight: 1.5 }}>
+                        Both parties' phone numbers and exact pickup address remain encrypted and locked. As soon as the tool owner accepts this request, phone numbers, WhatsApp links, and Google Maps directions will be instantly unmasked.
+                      </p>
                     )}
                   </div>
 
-                  {/* HANDOVER ACTIONS & TRANSITION BUTTONS */}
-                  <div className="glass-card" style={styles.detailCard}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-                      <h4 style={styles.sectionHeading}>
-                        <CheckCircle size={16} color="#0d9488" />
-                        Handshake Protocol Actions ({userRole} Perspective)
-                      </h4>
+                  {/* LIFECYCLE ACTION BUTTONS */}
+                  <div style={styles.lifecycleActions}>
+                    {/* Owner Accept */}
+                    {activeRental.owner_id?.toLowerCase() === currentUser.email?.toLowerCase() && activeRental.status === 'REQUESTED' && (
                       <button 
-                        onClick={() => setUserRole(userRole === 'BORROWER' ? 'OWNER' : 'BORROWER')}
-                        style={styles.smallToggleBtn}
+                        className="btn-success"
+                        onClick={() => handleRentalAction(activeRental.id, 'accept')}
+                        disabled={actionLoading}
+                        style={{ width: '100%' }}
                       >
-                        Switch Role to {userRole === 'BORROWER' ? 'Owner' : 'Borrower'}
+                        <CheckCircle size={16} />
+                        Accept Booking & Unmask My Address
                       </button>
-                    </div>
+                    )}
 
-                    {userRole === 'OWNER' ? (
-                      /* Owner Handover Controls */
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                        {selectedRental.status === 'REQUESTED' && (
-                          <div style={{ display: 'flex', gap: 10 }}>
-                            <button
-                              className="btn-success"
-                              style={{ flex: 1 }}
-                              disabled={actionLoading}
-                              onClick={() => handleRentalAction(selectedRental.id, 'accept')}
-                            >
-                              <CheckCircle2 size={16} />
-                              Accept Request (Trigger Contact Unmasking)
-                            </button>
-                            <button
-                              className="btn-secondary"
-                              disabled={actionLoading}
-                              onClick={() => handleRentalAction(selectedRental.id, 'reject')}
-                            >
-                              Decline
-                            </button>
-                          </div>
-                        )}
+                    {/* Owner Confirm Handover */}
+                    {activeRental.owner_id?.toLowerCase() === currentUser.email?.toLowerCase() && activeRental.status === 'ACCEPTED' && (
+                      <button 
+                        className="btn-primary"
+                        onClick={() => handleRentalAction(activeRental.id, 'confirm_pickup', { payment_received: true })}
+                        disabled={actionLoading}
+                        style={{ width: '100%' }}
+                      >
+                        <ShieldCheck size={16} />
+                        Confirm Tool Handover & Escrow Deposit Received
+                      </button>
+                    )}
 
-                        {selectedRental.status === 'ACCEPTED' && (
-                          <div>
-                            <p style={{ fontSize: 13, color: '#94a3b8', marginBottom: 10 }}>
-                              Borrower is on their way with ₹{selectedRental.total_amount} (Rental fee + ₹{selectedRental.security_deposit} deposit).
-                            </p>
-                            <button
-                              className="btn-warning"
-                              style={{ width: '100%' }}
-                              disabled={actionLoading}
-                              onClick={() => handleRentalAction(selectedRental.id, 'confirm_pickup', {
-                                payment_received: true,
-                                payment_mode_used: selectedRental.payment_method,
-                                handover_notes: 'Deposit received & held in escrow. Tool handed over.'
-                              })}
-                            >
-                              <ShieldCheck size={16} />
-                              Confirm Deposit Received & Hand Over Item (Move to ACTIVE_RENTAL)
-                            </button>
-                          </div>
-                        )}
-
-                        {selectedRental.status === 'ACTIVE_RENTAL' && (
-                          <div>
-                            <p style={{ fontSize: 13, color: '#94a3b8', marginBottom: 10 }}>
-                              Borrower has returned the tool. Inspect condition, verify accessories, and release full deposit refund.
-                            </p>
-                            <button
-                              className="btn-success"
-                              style={{ width: '100%' }}
-                              disabled={actionLoading}
-                              onClick={() => handleRentalAction(selectedRental.id, 'confirm_return', {
-                                inspection_passed: true,
-                                refund_deposited: true,
-                                return_notes: 'Item returned in great shape. ₹' + selectedRental.security_deposit + ' refund released.'
-                              })}
-                            >
-                              <CheckCircle2 size={16} />
-                              Confirm Item Returned Undamaged & Release Full Deposit Refund
-                            </button>
-                          </div>
-                        )}
-
-                        {selectedRental.status === 'COMPLETED' && (
-                          <div style={styles.successCallout}>
-                            <CheckCircle2 size={24} color="#10b981" />
-                            <div>
-                              <strong>Loop Completed Successfully!</strong>
-                              <p style={{ fontSize: 13, color: '#94a3b8', marginTop: 2 }}>
-                                Item has been returned and full security deposit was refunded.
-                              </p>
-                            </div>
-                          </div>
-                        )}
+                    {/* Borrower Return */}
+                    {activeRental.borrower_id?.toLowerCase() === currentUser.email?.toLowerCase() && activeRental.status === 'ACTIVE_RENTAL' && (
+                      <div style={styles.infoBanner}>
+                        <Clock size={16} color="#38bdf8" />
+                        <span>Rental active. Return equipment to owner before {activeRental.end_date}.</span>
                       </div>
-                    ) : (
-                      /* Borrower Guidance View */
-                      <div>
-                        {selectedRental.status === 'REQUESTED' && (
-                          <div style={styles.statusBannerInfo}>
-                            <Clock size={18} color="#f59e0b" />
-                            <div>
-                              <strong>Waiting for Lender to Accept</strong>
-                              <p style={{ fontSize: 13, color: '#94a3b8', marginTop: 2 }}>
-                                Once accepted, the exact address, direct call, and Google Maps will immediately unlock here.
-                              </p>
-                            </div>
-                          </div>
-                        )}
+                    )}
 
-                        {selectedRental.status === 'ACCEPTED' && (
-                          <div style={styles.statusBannerSuccess}>
-                            <Unlock size={18} color="#10b981" />
-                            <div>
-                              <strong>Request Accepted! Ready for Pickup</strong>
-                              <p style={{ fontSize: 13, color: '#94a3b8', marginTop: 2 }}>
-                                Head to the unmasked address above. Hand over ₹{selectedRental.total_amount} (fee + ₹{selectedRental.security_deposit} collateral hold) and collect the tool.
-                              </p>
-                            </div>
-                          </div>
-                        )}
+                    {/* Owner Confirm Return & Refund */}
+                    {activeRental.owner_id?.toLowerCase() === currentUser.email?.toLowerCase() && activeRental.status === 'ACTIVE_RENTAL' && (
+                      <button 
+                        className="btn-success"
+                        onClick={() => handleRentalAction(activeRental.id, 'confirm_return', { inspection_passed: true, refund_deposited: true })}
+                        disabled={actionLoading}
+                        style={{ width: '100%' }}
+                      >
+                        <CheckCircle2 size={16} />
+                        Confirm Tool Return & Release Escrow Deposit (₹{activeRental.security_deposit})
+                      </button>
+                    )}
 
-                        {selectedRental.status === 'ACTIVE_RENTAL' && (
-                          <div style={styles.statusBannerActive}>
-                            <Wrench size={18} color="#38bdf8" />
-                            <div>
-                              <strong>Tool in Your Possession (Active Rental)</strong>
-                              <p style={{ fontSize: 13, color: '#94a3b8', marginTop: 2 }}>
-                                Return the tool before {selectedRental.end_date} to receive your full ₹{selectedRental.security_deposit} deposit back.
-                              </p>
-                            </div>
+                    {activeRental.status === 'COMPLETED' && (
+                      <div style={styles.completedBanner}>
+                        <CheckCircle2 size={20} color="#10b981" />
+                        <div>
+                          <strong>Handover Protocol Successfully Completed</strong>
+                          <div style={{ fontSize: 12, color: '#cbd5e1', marginTop: 2 }}>
+                            Tool returned in good condition. Security deposit collateral of ₹{activeRental.security_deposit} has been released.
                           </div>
-                        )}
-
-                        {selectedRental.status === 'COMPLETED' && (
-                          <div style={styles.successCallout}>
-                            <CheckCircle2 size={24} color="#10b981" />
-                            <div>
-                              <strong>Rental Completed & Deposit Returned!</strong>
-                              <p style={{ fontSize: 13, color: '#94a3b8', marginTop: 2 }}>
-                                Thank you for using BorrowLoop. ₹{selectedRental.security_deposit} was returned to you.
-                              </p>
-                            </div>
-                          </div>
-                        )}
+                        </div>
                       </div>
                     )}
                   </div>
@@ -1380,360 +1120,162 @@ export default function App() {
         </section>
       )}
 
-      {/* ================= TAB 3: ANDROID APK HUB ================= */}
-      {activeTab === 'apk' && (
-        <section className="animate-fade-in">
-          <div className="glass-card" style={styles.apkHeroCard}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 16, flexWrap: 'wrap' }}>
-              <div style={styles.apkBigIcon}>
-                <Smartphone size={36} color="#0d9488" />
-              </div>
-              <div>
-                <h3 style={{ fontSize: 22, margin: 0 }}>BorrowLoop Android APK</h3>
-                <p style={{ color: '#94a3b8', fontSize: 14, marginTop: 4 }}>
-                  Standalone Native Android Debug Build (Compiled via Capacitor & Gradle)
-                </p>
-              </div>
+      {/* ================= TAB 3: ANDROID APK HUB (Web Visitors Only) ================= */}
+      {activeTab === 'apk' && !isMobileApp && (
+        <section style={{ marginTop: 20 }}>
+          <div className="glass-card" style={styles.apkHubCard}>
+            <div style={styles.apkIconLarge}>
+              <Smartphone size={40} color="#0d9488" />
             </div>
+            <h3 style={{ fontSize: 24, color: '#f8fafc', marginBottom: 8 }}>
+              BorrowLoop Android APK Hub
+            </h3>
+            <p style={{ fontSize: 14, color: '#94a3b8', maxWidth: 540, margin: '0 auto 24px', lineHeight: 1.5 }}>
+              BorrowLoop is built as a universal platform. You can use it right now in your web browser, or download and install the standalone native Android application.
+            </p>
 
-            {/* APK Status Card */}
             <div style={styles.apkStatusBox}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
-                <div>
-                  <div style={{ fontSize: 13, color: '#94a3b8' }}>Compilation Status:</div>
-                  <div style={{ fontSize: 18, fontWeight: 700, color: '#10b981', display: 'flex', alignItems: 'center', gap: 6, marginTop: 2 }}>
-                    <CheckCircle2 size={20} />
-                    Debug APK Compiled & Ready
-                  </div>
-                </div>
-
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontSize: 13, color: '#94a3b8' }}>File Size:</div>
-                  <div style={{ fontSize: 18, fontWeight: 700, color: '#38bdf8', marginTop: 2 }}>
-                    {apkStatus?.file_size_mb || '4.22'} MB
-                  </div>
-                </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: 13, color: '#cbd5e1' }}>Build Status:</span>
+                <span style={{ fontSize: 12, fontWeight: 700, color: '#10b981', background: 'rgba(16, 185, 129, 0.15)', padding: '4px 10px', borderRadius: 20 }}>
+                  Ready for Download
+                </span>
               </div>
-
-              <div style={{ marginTop: 12, fontSize: 12, color: '#64748b', wordBreak: 'break-all' }}>
-                <strong>Path:</strong> <code>{apkStatus?.apk_path || 'apk/BorrowLoop-v1.0.apk'}</code>
-              </div>
-
-              {/* Direct Download Button */}
-              <div style={{ marginTop: 20 }}>
-                <a
-                  href={`${apiBase}${apkStatus?.download_url || '/download/BorrowLoop-v1.0.apk'}`}
-                  download={apkStatus?.download_url ? apkStatus.download_url.split('/').pop() : 'BorrowLoop-v1.0.apk'}
-                  className="btn-primary"
-                  style={{
-                    display: 'inline-flex',
-                    textDecoration: 'none',
-                    padding: '14px 28px',
-                    fontSize: 16,
-                    borderRadius: 10,
-                    boxShadow: '0 8px 20px rgba(13, 148, 136, 0.4)'
-                  }}
-                >
-                  <Download size={20} />
-                  Download Standalone .APK File ({apkStatus?.file_size_mb || '4.12'} MB)
-                </a>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 10 }}>
+                <span style={{ fontSize: 13, color: '#cbd5e1' }}>File Size:</span>
+                <span style={{ fontSize: 14, fontWeight: 700, color: '#38bdf8' }}>
+                  {apkStatus?.file_size_mb || '4.12'} MB
+                </span>
               </div>
             </div>
 
-            {/* Step-by-Step Installation Guide */}
-            <div style={{ marginTop: 28 }}>
-              <h4 style={{ fontSize: 17, marginBottom: 14, color: '#f8fafc' }}>
-                📲 How to Install & Test on Any Android Device:
+            <div style={{ marginTop: 24 }}>
+              <a
+                href={`${apiBase}${apkStatus?.download_url || '/download/BorrowLoop-v1.0.apk'}`}
+                download="BorrowLoop-v1.0.apk"
+                className="btn-primary"
+                style={styles.apkDownloadBigBtn}
+              >
+                <Download size={20} />
+                Download Standalone APK ({apkStatus?.file_size_mb || '4.12'} MB)
+              </a>
+            </div>
+
+            <div style={styles.installInstructions}>
+              <h4 style={{ fontSize: 15, color: '#f8fafc', marginBottom: 10 }}>
+                📲 Quick Installation Instructions:
               </h4>
-
-              <div style={styles.guideStepsList}>
-                <div style={styles.guideStep}>
-                  <div style={styles.guideStepNumber}>1</div>
-                  <div>
-                    <strong>Download APK to Phone</strong>
-                    <p style={{ fontSize: 13, color: '#94a3b8', marginTop: 2 }}>
-                      Open this page on your phone browser using your computer's Wi-Fi IP (e.g. <code>http://192.168.x.x:8000</code>) and tap the Download button, or transfer via USB/Drive.
-                    </p>
-                  </div>
-                </div>
-
-                <div style={styles.guideStep}>
-                  <div style={styles.guideStepNumber}>2</div>
-                  <div>
-                    <strong>Allow Unknown Sources</strong>
-                    <p style={{ fontSize: 13, color: '#94a3b8', marginTop: 2 }}>
-                      In Android Settings, allow "Install from Unknown Sources" or tap Settings and "Allow from this source" when prompted.
-                    </p>
-                  </div>
-                </div>
-
-                <div style={styles.guideStep}>
-                  <div style={styles.guideStepNumber}>3</div>
-                  <div>
-                    <strong>Install and Launch</strong>
-                    <p style={{ fontSize: 13, color: '#94a3b8', marginTop: 2 }}>
-                      Tap <code>BorrowLoop-debug.apk</code> to install. Cleartext HTTP is pre-configured, so it connects seamlessly to your local Python server.
-                    </p>
-                  </div>
-                </div>
-
-                <div style={styles.guideStep}>
-                  <div style={styles.guideStepNumber}>4</div>
-                  <div>
-                    <strong>Recompile Anytime via Terminal</strong>
-                    <p style={{ fontSize: 13, color: '#94a3b8', marginTop: 2 }}>
-                      Whenever you modify code: <code>npm run build && npx cap sync android && cd android && ./gradlew assembleDebug</code>
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <ol style={{ textAlign: 'left', fontSize: 13, color: '#cbd5e1', paddingLeft: 20, lineHeight: 1.6 }}>
+                <li>Download the <code>BorrowLoop-v1.0.apk</code> file above.</li>
+                <li>Tap the downloaded file on your Android device.</li>
+                <li>If prompted, allow "Install Unknown Apps" for your browser.</li>
+                <li>Tap Install and launch BorrowLoop!</li>
+              </ol>
             </div>
           </div>
         </section>
       )}
 
-      {/* ================= BOOKING MODAL ================= */}
+      {/* ================= MODAL: REQUEST TO BORROW ================= */}
       {bookingTool && (
         <div style={styles.modalOverlay}>
-          <div className="glass-card animate-fade-in modal-dialog-responsive" style={styles.modalBox}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 14 }}>
-              <div>
-                <span className="badge badge-distance">
-                  <MapPin size={11} /> {bookingTool.distance_label || `${bookingTool.approx_distance_km || 0.8} km away`}
-                </span>
-                <h3 style={{ fontSize: 18, margin: '8px 0 2px 0' }}>{bookingTool.title}</h3>
-                <span style={{ fontSize: 12, color: '#94a3b8' }}>{bookingTool.category} • {bookingTool.condition || 'Good'}</span>
-              </div>
+          <div className="glass-card animate-fade-in" style={styles.modalCard}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+              <h3 style={{ fontSize: 18, color: '#f8fafc', margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+                <Wrench size={18} color="#0d9488" />
+                Request Equipment Rental
+              </h3>
               <button onClick={() => setBookingTool(null)} style={styles.closeBtn}>✕</button>
             </div>
 
-            {bookingSuccess ? (
-              <div style={{ textAlign: 'center', padding: '24px 0' }} className="animate-fade-in">
-                <CheckCircle2 size={48} color="#10b981" />
-                <h4 style={{ marginTop: 12, color: '#f8fafc' }}>Request Sent to Neighbor!</h4>
-                <p style={{ color: '#94a3b8', fontSize: 13, marginTop: 4 }}>
-                  Redirecting to your Rental Escrow Tracker...
-                </p>
+            <div style={styles.modalToolSummary}>
+              <img 
+                src={bookingTool.image_url || 'https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&w=700&q=80'} 
+                alt={bookingTool.title}
+                style={{ width: 60, height: 60, borderRadius: 8, objectFit: 'cover' }}
+              />
+              <div>
+                <h4 style={{ fontSize: 14, color: '#f8fafc', margin: 0 }}>{bookingTool.title}</h4>
+                <div style={{ fontSize: 12, color: '#2dd4bf', marginTop: 2 }}>{bookingTool.approx_location}</div>
+                <div style={{ fontSize: 12, color: '#94a3b8', marginTop: 2 }}>Daily Rate: ₹{bookingTool.daily_rate}</div>
               </div>
-            ) : (
-              <form onSubmit={handleCreateBooking}>
-                {/* Dates */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 12 }}>
-                  <div>
-                    <label style={styles.formLabel}>Start Date</label>
-                    <input
-                      type="date"
-                      required
-                      value={startDate}
-                      onChange={(e) => setStartDate(e.target.value)}
-                      style={{ width: '100%' }}
-                    />
-                  </div>
-                  <div>
-                    <label style={styles.formLabel}>End Date</label>
-                    <input
-                      type="date"
-                      required
-                      value={endDate}
-                      onChange={(e) => setEndDate(e.target.value)}
-                      style={{ width: '100%' }}
-                    />
-                  </div>
-                </div>
-
-                {/* Borrower details */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 12 }}>
-                  <div>
-                    <label style={styles.formLabel}>Your Name</label>
-                    <input
-                      type="text"
-                      required
-                      value={borrowerName}
-                      onChange={(e) => setBorrowerName(e.target.value)}
-                      style={{ width: '100%' }}
-                    />
-                  </div>
-                  <div>
-                    <label style={styles.formLabel}>Your Phone</label>
-                    <input
-                      type="text"
-                      required
-                      value={borrowerPhone}
-                      onChange={(e) => setBorrowerPhone(e.target.value)}
-                      style={{ width: '100%' }}
-                    />
-                  </div>
-                </div>
-
-                {/* Payment mode */}
-                <div style={{ marginBottom: 14 }}>
-                  <label style={styles.formLabel}>Deposit & Payment Mode</label>
-                  <select 
-                    value={paymentMethod} 
-                    onChange={(e) => setPaymentMethod(e.target.value)}
-                    style={{ width: '100%' }}
-                  >
-                    <option value="UPI">UPI / Google Pay / PhonePe (Fast Escrow)</option>
-                    <option value="CASH">Cash on In-Person Handover</option>
-                  </select>
-                </div>
-
-                {/* Price Summary Calculation */}
-                <div style={styles.modalSummaryBox}>
-                  <div style={styles.summaryRow}>
-                    <span>Daily Rate:</span>
-                    <span>₹{bookingTool.daily_rate}/day</span>
-                  </div>
-                  <div style={styles.summaryRow}>
-                    <span>Replacement Collateral Hold:</span>
-                    <span style={{ color: '#f59e0b', fontWeight: 600 }}>₹{bookingTool.replacement_deposit} (Refundable)</span>
-                  </div>
-                  <div style={{ ...styles.summaryRow, borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: 8, marginTop: 4, fontWeight: 700, fontSize: 15 }}>
-                    <span>Estimated Total:</span>
-                    <span style={{ color: '#38bdf8' }}>₹{bookingTool.daily_rate + bookingTool.replacement_deposit}</span>
-                  </div>
-                </div>
-
-                <div style={styles.modalPrivacyNotice}>
-                  <Lock size={14} color="#f59e0b" />
-                  <span>The owner's full address and contact will unlock upon their acceptance.</span>
-                </div>
-
-                <div style={{ display: 'flex', gap: 10, marginTop: 16 }}>
-                  <button type="button" className="btn-secondary" onClick={() => setBookingTool(null)} style={{ flex: 1 }}>
-                    Cancel
-                  </button>
-                  <button type="submit" className="btn-primary" disabled={actionLoading} style={{ flex: 2 }}>
-                    {actionLoading ? 'Submitting...' : 'Confirm Request'}
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* ================= LIST TOOL MODAL ================= */}
-      {showAddToolModal && (
-        <div style={styles.modalOverlay}>
-          <div className="glass-card animate-fade-in modal-dialog-responsive" style={styles.modalBox}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-              <h3 style={{ fontSize: 18, margin: 0, display: 'flex', alignItems: 'center', gap: 6 }}>
-                <PlusCircle size={20} color="#0d9488" />
-                List Your Tool for Neighborhood Sharing
-              </h3>
-              <button onClick={() => setShowAddToolModal(false)} style={styles.closeBtn}>✕</button>
             </div>
 
-            <form onSubmit={handleAddNewTool}>
-              <div style={{ marginBottom: 10 }}>
-                <label style={styles.formLabel}>Tool Title</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="e.g. Bosch GBH 2-26 Rotary Hammer Drill"
-                  value={newToolTitle}
-                  onChange={(e) => setNewToolTitle(e.target.value)}
-                  style={{ width: '100%' }}
-                />
+            {bookingError && (
+              <div style={styles.errorBox}>
+                <AlertCircle size={16} color="#ef4444" />
+                <span>{bookingError}</span>
               </div>
+            )}
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 10 }}>
-                <div>
-                  <label style={styles.formLabel}>Category</label>
-                  <select
-                    value={newToolCategory}
-                    onChange={(e) => setNewToolCategory(e.target.value)}
-                    style={{ width: '100%' }}
-                  >
-                    <option value="Power Tools">Power Tools</option>
-                    <option value="Carpentry & Woodwork">Carpentry & Woodwork</option>
-                    <option value="Cleaning & Pressure">Cleaning & Pressure</option>
-                    <option value="Ladders & Access">Ladders & Access</option>
-                    <option value="Gardening & Yard">Gardening & Yard</option>
-                    <option value="Measurement & Detection">Measurement & Detection</option>
-                  </select>
-                </div>
-                <div>
-                  <label style={styles.formLabel}>Neighborhood Pincode</label>
-                  <select
-                    value={newToolPincode}
-                    onChange={(e) => {
-                      setNewToolPincode(e.target.value);
-                      if (e.target.value === '695003') setNewToolLocality('Kowdiar');
-                      if (e.target.value === '695001') setNewToolLocality('Statue');
-                      if (e.target.value === '695011') setNewToolLocality('Pattom');
-                      if (e.target.value === '695014') setNewToolLocality('Sasthamangalam');
-                      if (e.target.value === '695033') setNewToolLocality('Technopark');
-                    }}
-                    style={{ width: '100%' }}
-                  >
-                    <option value="695003">695003 (Kowdiar)</option>
-                    <option value="695001">695001 (Statue)</option>
-                    <option value="695011">695011 (Pattom)</option>
-                    <option value="695014">695014 (Sasthamangalam)</option>
-                    <option value="695033">695033 (Technopark)</option>
-                  </select>
-                </div>
+            {bookingSuccess && (
+              <div style={styles.successBox}>
+                <CheckCircle2 size={16} color="#10b981" />
+                <span>Rental request submitted! Forwarding to Escrow Tracker...</span>
               </div>
+            )}
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 10 }}>
-                <div>
-                  <label style={styles.formLabel}>Daily Rate (₹)</label>
-                  <input
-                    type="number"
+            <form onSubmit={handleCreateBooking} style={{ marginTop: 16 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div style={styles.fieldGroup}>
+                  <label style={styles.fieldLabel}>Start Date</label>
+                  <input 
+                    type="date" 
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
                     required
-                    value={newToolDailyRate}
-                    onChange={(e) => setNewToolDailyRate(e.target.value)}
-                    style={{ width: '100%' }}
+                    style={styles.fieldInput}
                   />
                 </div>
-                <div>
-                  <label style={styles.formLabel}>Replacement Deposit (₹)</label>
-                  <input
-                    type="number"
+                <div style={styles.fieldGroup}>
+                  <label style={styles.fieldLabel}>End Date</label>
+                  <input 
+                    type="date" 
+                    value={endDate}
+                    onChange={(e) => setEndDate(e.target.value)}
                     required
-                    value={newToolDeposit}
-                    onChange={(e) => setNewToolDeposit(e.target.value)}
-                    style={{ width: '100%' }}
+                    style={styles.fieldInput}
                   />
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 12 }}>
-                <div>
-                  <label style={styles.formLabel}>Owner Name</label>
-                  <input
-                    type="text"
-                    required
-                    value={newToolOwnerName}
-                    onChange={(e) => setNewToolOwnerName(e.target.value)}
-                    style={{ width: '100%' }}
-                  />
+              {/* Escrow Calculation Preview */}
+              <div style={styles.escrowCalcBox}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: '#cbd5e1' }}>
+                  <span>Rental Duration:</span>
+                  <span>
+                    {Math.max(1, Math.round((new Date(endDate) - new Date(startDate)) / 86400000) + 1)} Day(s)
+                  </span>
                 </div>
-                <div>
-                  <label style={styles.formLabel}>Phone (Contact)</label>
-                  <input
-                    type="text"
-                    required
-                    value={newToolOwnerPhone}
-                    onChange={(e) => setNewToolOwnerPhone(e.target.value)}
-                    style={{ width: '100%' }}
-                  />
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: '#cbd5e1', marginTop: 6 }}>
+                  <span>Rental Fee:</span>
+                  <span>₹{bookingTool.daily_rate * Math.max(1, Math.round((new Date(endDate) - new Date(startDate)) / 86400000) + 1)}</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, color: '#cbd5e1', marginTop: 6 }}>
+                  <span>Security Collateral (Escrow Hold):</span>
+                  <span>₹{bookingTool.replacement_deposit}</span>
+                </div>
+                <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.1)', marginTop: 8, paddingTop: 8, display: 'flex', justifyContent: 'space-between', fontSize: 15, fontWeight: 700, color: '#10b981' }}>
+                  <span>Total Escrow Amount:</span>
+                  <span>
+                    ₹{(bookingTool.daily_rate * Math.max(1, Math.round((new Date(endDate) - new Date(startDate)) / 86400000) + 1)) + bookingTool.replacement_deposit}
+                  </span>
                 </div>
               </div>
 
-              <div style={styles.modalPrivacyNotice}>
-                <ShieldCheck size={14} color="#10b981" />
-                <span>Your exact house address and phone will remain locked until you accept a borrower request.</span>
+              <div style={{ marginTop: 14 }}>
+                <label style={styles.fieldLabel}>Borrower Contact (Your Profile)</label>
+                <div style={{ fontSize: 13, color: '#94a3b8', background: '#131b2e', padding: '10px 14px', borderRadius: 8 }}>
+                  <strong>{currentUser.full_name}</strong> • {currentUser.email} • {currentUser.phone}
+                </div>
               </div>
 
-              <div style={{ display: 'flex', gap: 10, marginTop: 16 }}>
-                <button type="button" className="btn-secondary" onClick={() => setShowAddToolModal(false)} style={{ flex: 1 }}>
+              <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
+                <button type="button" className="btn-secondary" onClick={() => setBookingTool(null)} style={{ flex: 1 }}>
                   Cancel
                 </button>
-                <button type="submit" className="btn-primary" style={{ flex: 2 }}>
-                  Publish Tool Listing
+                <button type="submit" className="btn-primary" disabled={actionLoading} style={{ flex: 2 }}>
+                  {actionLoading ? 'Submitting...' : 'Confirm Rental Request'}
                 </button>
               </div>
             </form>
@@ -1741,50 +1283,306 @@ export default function App() {
         </div>
       )}
 
-      {/* ================= MOBILE BOTTOM NAVIGATION BAR (NATIVE APP FEEL) ================= */}
+      {/* ================= MODAL: LIST A TOOL ================= */}
+      {showAddToolModal && (
+        <div style={styles.modalOverlay}>
+          <div className="glass-card animate-fade-in" style={styles.modalCardLarge}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+              <h3 style={{ fontSize: 18, color: '#f8fafc', margin: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
+                <PlusCircle size={18} color="#0d9488" />
+                List Equipment for Rent
+              </h3>
+              <button onClick={() => setShowAddToolModal(false)} style={styles.closeBtn}>✕</button>
+            </div>
+
+            {addToolError && (
+              <div style={styles.errorBox}>
+                <AlertCircle size={16} color="#ef4444" />
+                <span>{addToolError}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleAddNewTool} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div style={styles.fieldGroup}>
+                <label style={styles.fieldLabel}>Equipment Title *</label>
+                <input 
+                  type="text" 
+                  placeholder="e.g. Bosch GBH 2-26 Rotary Hammer Drill Set"
+                  value={newTitle}
+                  onChange={(e) => setNewTitle(e.target.value)}
+                  required
+                  style={styles.fieldInput}
+                />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                <div style={styles.fieldGroup}>
+                  <label style={styles.fieldLabel}>Category</label>
+                  <select 
+                    value={newCategory} 
+                    onChange={(e) => setNewCategory(e.target.value)}
+                    style={styles.fieldInput}
+                  >
+                    {categories.filter(c => c !== 'All').map(cat => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                  </select>
+                </div>
+                <div style={styles.fieldGroup}>
+                  <label style={styles.fieldLabel}>Condition</label>
+                  <select 
+                    value={newCondition} 
+                    onChange={(e) => setNewCondition(e.target.value)}
+                    style={styles.fieldInput}
+                  >
+                    <option value="Pristine (Like New)">Pristine (Like New)</option>
+                    <option value="Excellent">Excellent</option>
+                    <option value="Good & Sturdy">Good & Sturdy</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12 }}>
+                <div style={styles.fieldGroup}>
+                  <label style={styles.fieldLabel}>Daily Rate (₹) *</label>
+                  <input 
+                    type="number" 
+                    placeholder="e.g. 400"
+                    value={newDailyRate}
+                    onChange={(e) => setNewDailyRate(e.target.value)}
+                    required
+                    style={styles.fieldInput}
+                  />
+                </div>
+                <div style={styles.fieldGroup}>
+                  <label style={styles.fieldLabel}>Hourly Rate (₹)</label>
+                  <input 
+                    type="number" 
+                    placeholder="e.g. 70"
+                    value={newHourlyRate}
+                    onChange={(e) => setNewHourlyRate(e.target.value)}
+                    style={styles.fieldInput}
+                  />
+                </div>
+                <div style={styles.fieldGroup}>
+                  <label style={styles.fieldLabel}>Deposit Collateral (₹) *</label>
+                  <input 
+                    type="number" 
+                    placeholder="e.g. 8000"
+                    value={newDeposit}
+                    onChange={(e) => setNewDeposit(e.target.value)}
+                    required
+                    style={styles.fieldInput}
+                  />
+                </div>
+              </div>
+
+              <div style={styles.fieldGroup}>
+                <label style={styles.fieldLabel}>Description & Included Accessories</label>
+                <textarea 
+                  rows={3}
+                  placeholder="Mention drill bits, batteries, carrying case, safety precautions..."
+                  value={newDescription}
+                  onChange={(e) => setNewDescription(e.target.value)}
+                  style={{ ...styles.fieldInput, resize: 'vertical' }}
+                />
+              </div>
+
+              <div style={styles.fieldGroup}>
+                <label style={styles.fieldLabel}>Photo URL (Optional)</label>
+                <input 
+                  type="url" 
+                  placeholder="https://images.unsplash.com/photo-..."
+                  value={newImageUrl}
+                  onChange={(e) => setNewImageUrl(e.target.value)}
+                  style={styles.fieldInput}
+                />
+              </div>
+
+              {/* Handover Address (Privacy Shielded) */}
+              <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: 12 }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: '#f8fafc', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <Lock size={14} color="#f59e0b" />
+                  Pickup Address (Privacy-Shielded until Booking Acceptance)
+                </div>
+                <div style={{ fontSize: 11, color: '#94a3b8', marginBottom: 10 }}>
+                  This address is never shown publicly. Only neighbors whose requests you accept will receive this.
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                  <input 
+                    type="text" 
+                    placeholder="House / Flat No."
+                    value={newHouseFlat}
+                    onChange={(e) => setNewHouseFlat(e.target.value)}
+                    style={styles.fieldInput}
+                  />
+                  <input 
+                    type="text" 
+                    placeholder="Building / Street"
+                    value={newStreet}
+                    onChange={(e) => setNewStreet(e.target.value)}
+                    style={styles.fieldInput}
+                  />
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginTop: 10 }}>
+                  <input 
+                    type="text" 
+                    placeholder="Locality"
+                    value={newLocality}
+                    onChange={(e) => setNewLocality(e.target.value)}
+                    style={styles.fieldInput}
+                  />
+                  <input 
+                    type="text" 
+                    placeholder="Pincode"
+                    value={newPincode}
+                    onChange={(e) => setNewPincode(e.target.value)}
+                    style={styles.fieldInput}
+                  />
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', gap: 10, marginTop: 16 }}>
+                <button type="button" className="btn-secondary" onClick={() => setShowAddToolModal(false)} style={{ flex: 1 }}>
+                  Cancel
+                </button>
+                <button type="submit" className="btn-primary" disabled={addingTool} style={{ flex: 2 }}>
+                  {addingTool ? 'Listing Tool...' : 'Publish Equipment Listing'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ================= MOBILE BOTTOM NAVIGATION ================= */}
       <nav className="mobile-bottom-nav">
-        <button
+        <button 
           onClick={() => setActiveTab('explore')}
           className={`nav-item-btn ${activeTab === 'explore' ? 'active' : ''}`}
         >
           <Search size={18} />
           <span>Explore</span>
         </button>
-        <button
+        <button 
           onClick={() => setActiveTab('rentals')}
           className={`nav-item-btn ${activeTab === 'rentals' ? 'active' : ''}`}
         >
           <Repeat size={18} />
-          <span>Escrows</span>
+          <span>Tracker</span>
+          {rentals.length > 0 && (
+            <span style={styles.mobileNavBadge}>{rentals.length}</span>
+          )}
         </button>
-        <button
+        <button 
           onClick={() => setShowAddToolModal(true)}
           className="nav-item-btn"
         >
-          <PlusCircle size={18} />
+          <PlusCircle size={18} color="#2dd4bf" />
           <span>List Tool</span>
         </button>
-        <button
-          onClick={() => setActiveTab('apk')}
-          className={`nav-item-btn ${activeTab === 'apk' ? 'active' : ''}`}
-        >
-          <Smartphone size={18} />
-          <span>APK App</span>
-        </button>
+        {!isMobileApp && (
+          <button 
+            onClick={() => setActiveTab('apk')}
+            className={`nav-item-btn ${activeTab === 'apk' ? 'active' : ''}`}
+          >
+            <Smartphone size={18} />
+            <span>APK</span>
+          </button>
+        )}
       </nav>
     </div>
   );
 }
 
-// Inline Styles with high aesthetic density and responsive layouts
+// -------------------------------------------------------------
+// STYLES
+// -------------------------------------------------------------
 const styles = {
+  authContainer: {
+    minHeight: '100vh',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '24px 16px',
+    background: 'radial-gradient(circle at 50% 20%, rgba(13, 148, 136, 0.15) 0%, transparent 60%)'
+  },
+  authCard: {
+    width: '100%',
+    maxWidth: 480,
+    padding: '32px 28px',
+    borderRadius: 16
+  },
+  authHeader: {
+    textAlign: 'center',
+    marginBottom: 20
+  },
+  authLogoIcon: {
+    width: 56,
+    height: 56,
+    borderRadius: 16,
+    background: 'linear-gradient(135deg, #0d9488, #059669)',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    boxShadow: '0 8px 24px rgba(13, 148, 136, 0.4)',
+    marginBottom: 12
+  },
+  authTitle: {
+    fontSize: 26,
+    fontWeight: 800,
+    color: '#f8fafc',
+    margin: 0
+  },
+  authSub: {
+    fontSize: 13,
+    color: '#94a3b8',
+    marginTop: 4
+  },
+  authIntroBox: {
+    background: 'rgba(13, 148, 136, 0.1)',
+    border: '1px solid rgba(13, 148, 136, 0.25)',
+    borderRadius: 10,
+    padding: '12px 14px',
+    display: 'flex',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 20
+  },
+  authForm: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 14
+  },
+  fieldGroup: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 6
+  },
+  fieldLabel: {
+    fontSize: 12,
+    fontWeight: 600,
+    color: '#cbd5e1',
+    display: 'flex',
+    alignItems: 'center',
+    gap: 6
+  },
+  fieldInput: {
+    width: '100%',
+    boxSizing: 'border-box'
+  },
+  submitBtn: {
+    padding: '12px 20px',
+    fontSize: 15,
+    borderRadius: 8
+  },
   topHeader: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: '16px 0',
-    borderBottom: '1px solid rgba(255,255,255,0.08)',
-    marginBottom: 16,
+    padding: '18px 0',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
     flexWrap: 'wrap',
     gap: 12
   },
@@ -1794,203 +1592,112 @@ const styles = {
     gap: 12
   },
   logoIcon: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
-    background: 'linear-gradient(135deg, #0d9488, #0f766e)',
+    width: 40,
+    height: 40,
+    borderRadius: 10,
+    background: 'linear-gradient(135deg, #0d9488, #059669)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    boxShadow: '0 4px 16px rgba(13, 148, 136, 0.4)'
+    boxShadow: '0 4px 14px rgba(13, 148, 136, 0.4)'
   },
   logoTitle: {
-    fontSize: 22,
-    margin: 0,
-    background: 'linear-gradient(135deg, #ffffff, #99f6e4)',
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
-    fontWeight: 800
+    fontSize: 20,
+    fontWeight: 800,
+    color: '#f8fafc',
+    margin: 0
   },
   logoSub: {
     fontSize: 12,
     color: '#94a3b8',
     margin: 0
   },
-  apkTag: {
-    fontSize: 10,
-    fontWeight: 700,
-    background: 'rgba(13, 148, 136, 0.2)',
-    color: '#2dd4bf',
-    padding: '2px 6px',
-    borderRadius: 4,
-    border: '1px solid rgba(45, 212, 191, 0.3)'
-  },
   headerControls: {
     display: 'flex',
     alignItems: 'center',
-    gap: 10,
-    flexWrap: 'wrap'
+    gap: 10
   },
-  serverOnlineBtn: {
-    background: 'rgba(16, 185, 129, 0.1)',
-    border: '1px solid rgba(16, 185, 129, 0.3)',
-    color: '#34d399',
-    fontSize: 12,
-    padding: '6px 10px',
-    borderRadius: 20
-  },
-  serverOfflineBtn: {
-    background: 'rgba(239, 68, 68, 0.1)',
-    border: '1px solid rgba(239, 68, 68, 0.3)',
-    color: '#f87171',
-    fontSize: 12,
-    padding: '6px 10px',
-    borderRadius: 20
-  },
-  roleToggleContainer: {
+  userProfilePill: {
     display: 'flex',
-    background: '#131b2e',
-    padding: 3,
-    borderRadius: 10,
-    border: '1px solid rgba(255,255,255,0.08)'
+    alignItems: 'center',
+    gap: 8,
+    background: 'rgba(255, 255, 255, 0.05)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: 20,
+    padding: '6px 14px'
   },
-  roleActiveBtn: {
-    background: '#0d9488',
-    color: '#fff',
-    fontSize: 12,
-    padding: '6px 12px',
-    borderRadius: 7,
-    boxShadow: '0 2px 6px rgba(0,0,0,0.2)'
-  },
-  roleInactiveBtn: {
-    background: 'transparent',
-    color: '#94a3b8',
-    fontSize: 12,
-    padding: '6px 12px',
-    borderRadius: 7
-  },
-  settingsModal: {
-    padding: 16,
-    marginBottom: 16
-  },
-  closeBtn: {
-    background: 'transparent',
-    color: '#94a3b8',
-    fontSize: 16,
-    padding: 4
+  logoutBtn: {
+    background: 'rgba(239, 68, 68, 0.12)',
+    color: '#f87171',
+    border: '1px solid rgba(239, 68, 68, 0.25)',
+    padding: '7px 12px',
+    borderRadius: 8,
+    fontSize: 12
   },
   heroBanner: {
-    padding: '26px 22px',
-    marginBottom: 16,
-    background: 'linear-gradient(135deg, rgba(13, 148, 136, 0.18) 0%, rgba(15, 23, 42, 0.9) 100%)',
-    border: '1px solid rgba(13, 148, 136, 0.3)',
-    position: 'relative',
-    overflow: 'hidden'
+    padding: '32px 28px',
+    marginTop: 20,
+    borderRadius: 16,
+    background: 'linear-gradient(135deg, rgba(13, 25, 48, 0.95), rgba(13, 148, 136, 0.15))',
+    border: '1px solid rgba(13, 148, 136, 0.3)'
   },
   heroPill: {
     display: 'inline-flex',
     alignItems: 'center',
     gap: 6,
     background: 'rgba(13, 148, 136, 0.2)',
-    border: '1px solid rgba(45, 212, 191, 0.3)',
     color: '#2dd4bf',
+    padding: '4px 12px',
+    borderRadius: 20,
     fontSize: 12,
     fontWeight: 600,
-    padding: '4px 10px',
-    borderRadius: 20,
     marginBottom: 12
   },
   heroHeadline: {
-    fontSize: 'clamp(24px, 4vw, 34px)',
-    lineHeight: 1.2,
-    marginBottom: 10,
-    color: '#f8fafc'
+    fontSize: 28,
+    lineHeight: 1.25,
+    color: '#f8fafc',
+    margin: '0 0 10px'
   },
   heroParagraph: {
     fontSize: 14,
     color: '#cbd5e1',
-    lineHeight: 1.5,
-    marginBottom: 16
-  },
-  metricsGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))',
-    gap: 10,
-    margin: '14px 0'
-  },
-  metricItem: {
-    background: 'rgba(19, 27, 46, 0.75)',
-    border: '1px solid rgba(255, 255, 255, 0.08)',
-    padding: '8px 10px',
-    borderRadius: 8,
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  metricValue: {
-    fontSize: 16,
-    fontWeight: 800,
-    color: '#2dd4bf'
-  },
-  metricLabel: {
-    fontSize: 10,
-    color: '#94a3b8',
-    marginTop: 2
-  },
-  roleBanner: (role) => ({
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    background: role === 'BORROWER' ? 'rgba(14, 165, 233, 0.1)' : 'rgba(16, 185, 129, 0.1)',
-    border: `1px solid ${role === 'BORROWER' ? 'rgba(14, 165, 233, 0.25)' : 'rgba(16, 185, 129, 0.25)'}`,
-    padding: '10px 14px',
-    borderRadius: 10,
-    marginBottom: 16,
-    flexWrap: 'wrap',
-    gap: 8
-  }),
-  switchRoleInlineBtn: {
-    background: 'rgba(255,255,255,0.08)',
-    color: '#f8fafc',
-    fontSize: 12,
-    padding: '5px 10px',
-    borderRadius: 6
+    lineHeight: 1.6,
+    margin: 0
   },
   desktopTabNav: {
     display: 'flex',
     gap: 8,
-    marginBottom: 20,
-    overflowX: 'auto',
-    paddingBottom: 4
+    marginTop: 20,
+    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+    paddingBottom: 12
   },
   tabActive: {
-    background: '#0d9488',
-    color: '#fff',
-    padding: '10px 16px',
-    borderRadius: 10,
-    fontSize: 13,
-    fontWeight: 600,
-    boxShadow: '0 4px 12px rgba(13, 148, 136, 0.3)',
-    whiteSpace: 'nowrap'
+    background: 'rgba(13, 148, 136, 0.2)',
+    color: '#2dd4bf',
+    border: '1px solid rgba(13, 148, 136, 0.4)',
+    padding: '10px 18px',
+    borderRadius: 8,
+    position: 'relative'
   },
   tabInactive: {
-    background: '#131b2e',
+    background: 'transparent',
     color: '#94a3b8',
-    border: '1px solid rgba(255,255,255,0.08)',
-    padding: '10px 16px',
-    borderRadius: 10,
-    fontSize: 13,
-    whiteSpace: 'nowrap'
+    border: '1px solid transparent',
+    padding: '10px 18px',
+    borderRadius: 8
   },
   tabBadge: {
-    background: 'rgba(255,255,255,0.2)',
+    background: '#0d9488',
     color: '#fff',
-    fontSize: 11,
+    fontSize: 10,
     padding: '2px 6px',
     borderRadius: 10,
     marginLeft: 6
   },
-  searchBarCard: {
-    padding: 16
+  filterCard: {
+    padding: '16px 20px',
+    borderRadius: 12
   },
   searchRow: {
     display: 'flex',
@@ -1998,110 +1705,100 @@ const styles = {
     flexWrap: 'wrap'
   },
   searchInputWrap: {
-    flex: 2,
-    minWidth: 240,
+    flex: '1 1 280px',
     display: 'flex',
     alignItems: 'center',
+    gap: 10,
     background: '#131b2e',
     borderRadius: 8,
-    border: '1px solid rgba(255,255,255,0.08)'
-  },
-  mainSearchInput: {
-    flex: 1,
-    background: 'transparent',
-    border: 'none',
-    color: '#fff',
-    padding: '12px 14px',
-    fontSize: 14,
-    outline: 'none'
-  },
-  clearSearchBtn: {
-    background: 'transparent',
-    color: '#94a3b8',
     padding: '0 12px',
-    fontSize: 14
+    border: '1px solid rgba(255, 255, 255, 0.08)'
   },
-  pincodeSelectWrap: {
-    flex: 1,
-    minWidth: 200,
+  searchBox: {
+    border: 'none',
+    background: 'transparent',
+    padding: '10px 0',
+    flex: 1
+  },
+  pincodeInputWrap: {
+    width: '180px',
     display: 'flex',
     alignItems: 'center',
+    gap: 8,
     background: '#131b2e',
     borderRadius: 8,
-    border: '1px solid rgba(255,255,255,0.08)',
-    paddingLeft: 10
+    padding: '0 12px',
+    border: '1px solid rgba(255, 255, 255, 0.08)'
   },
-  pincodeSelect: {
-    flex: 1,
-    background: 'transparent',
+  pincodeBox: {
     border: 'none',
-    color: '#fff',
-    padding: '12px 10px',
-    fontSize: 13,
-    outline: 'none'
+    background: 'transparent',
+    padding: '10px 0',
+    width: '100%'
   },
   categoryPills: {
     display: 'flex',
     gap: 8,
-    marginTop: 14,
     overflowX: 'auto',
-    paddingBottom: 4
-  },
-  categoryPill: {
-    background: '#131b2e',
-    color: '#94a3b8',
-    border: '1px solid rgba(255,255,255,0.06)',
-    padding: '6px 12px',
-    borderRadius: 20,
-    fontSize: 12,
-    whiteSpace: 'nowrap'
+    paddingTop: 14
   },
   categoryPillActive: {
-    background: 'rgba(13, 148, 136, 0.2)',
-    color: '#2dd4bf',
-    border: '1px solid rgba(45, 212, 191, 0.4)',
-    padding: '6px 12px',
-    borderRadius: 20,
+    background: '#0d9488',
+    color: '#fff',
+    padding: '6px 14px',
     fontSize: 12,
-    fontWeight: 600,
+    borderRadius: 20,
+    whiteSpace: 'nowrap'
+  },
+  categoryPillInactive: {
+    background: 'rgba(255, 255, 255, 0.05)',
+    color: '#94a3b8',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
+    padding: '6px 14px',
+    fontSize: 12,
+    borderRadius: 20,
     whiteSpace: 'nowrap'
   },
   toolCard: {
-    display: 'flex',
-    flexDirection: 'column',
-    overflow: 'hidden'
-  },
-  imageWrap: {
-    position: 'relative',
-    height: 170,
-    width: '100%',
     overflow: 'hidden',
-    background: '#0a0e17'
+    borderRadius: 14,
+    display: 'flex',
+    flexDirection: 'column'
   },
-  toolImg: {
+  toolImageWrap: {
+    position: 'relative',
+    height: 180,
+    background: '#131b2e'
+  },
+  toolImage: {
     width: '100%',
     height: '100%',
     objectFit: 'cover'
   },
-  imageBadgeOverlay: {
+  categoryBadge: {
     position: 'absolute',
     top: 10,
     left: 10,
-    right: 10,
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  },
-  categoryBadge: {
-    background: 'rgba(13, 18, 30, 0.88)',
+    background: 'rgba(10, 14, 23, 0.85)',
     backdropFilter: 'blur(8px)',
-    color: '#cbd5e1',
+    color: '#2dd4bf',
     fontSize: 11,
     fontWeight: 600,
-    padding: '3px 8px',
-    borderRadius: 6
+    padding: '4px 10px',
+    borderRadius: 12
   },
-  cardContent: {
+  myToolBadge: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    background: 'rgba(16, 185, 129, 0.9)',
+    color: '#fff',
+    fontSize: 11,
+    fontWeight: 700,
+    padding: '4px 10px',
+    borderRadius: 12
+  },
+  toolCardBody: {
     padding: 16,
     display: 'flex',
     flexDirection: 'column',
@@ -2109,427 +1806,213 @@ const styles = {
   },
   toolTitle: {
     fontSize: 16,
+    fontWeight: 700,
     color: '#f8fafc',
-    marginBottom: 6,
+    margin: '0 0 6px',
     lineHeight: 1.3
   },
   toolDesc: {
-    fontSize: 13,
+    fontSize: 12,
     color: '#94a3b8',
-    lineHeight: 1.4,
-    marginBottom: 12,
-    display: '-webkit-box',
-    WebkitLineClamp: 2,
-    WebkitBoxOrient: 'vertical',
-    overflow: 'hidden'
+    margin: '0 0 12px',
+    lineHeight: 1.5,
+    flex: 1
   },
-  pricingBox: {
+  metaRow: {
     display: 'flex',
     justifyContent: 'space-between',
-    background: '#131b2e',
-    padding: '10px 12px',
-    borderRadius: 8,
-    marginBottom: 12
-  },
-  priceLabel: {
-    fontSize: 11,
-    color: '#94a3b8',
-    textTransform: 'uppercase'
-  },
-  priceValue: {
-    fontSize: 16,
-    fontWeight: 700,
-    color: '#f8fafc'
-  },
-  depositValue: {
-    fontSize: 16,
-    fontWeight: 700,
-    color: '#f59e0b'
-  },
-  privacyShieldBox: {
-    background: 'rgba(245, 158, 11, 0.08)',
-    border: '1px dashed rgba(245, 158, 11, 0.25)',
-    padding: '10px 12px',
-    borderRadius: 8,
-    marginTop: 'auto'
-  },
-  privacyText: {
-    fontSize: 12,
-    fontWeight: 600,
-    color: '#fbbf24'
-  },
-  approxLocation: {
-    fontSize: 12,
-    color: '#cbd5e1',
-    marginTop: 4
-  },
-  privacyNote: {
-    fontSize: 11,
-    color: '#94a3b8',
-    marginTop: 4,
-    lineHeight: 1.3
-  },
-  howItWorksCard: {
-    padding: '28px 20px',
-    marginTop: 32,
-    marginBottom: 20
-  },
-  protocolGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))',
-    gap: 16
-  },
-  protocolCard: {
-    background: '#131b2e',
-    padding: 18,
-    borderRadius: 12,
-    border: '1px solid rgba(255, 255, 255, 0.06)'
-  },
-  protocolNumber: {
-    width: 28,
-    height: 28,
-    borderRadius: '50%',
-    background: '#0d9488',
-    color: '#fff',
-    display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
-    fontWeight: 700,
-    fontSize: 13,
     marginBottom: 10
   },
-  protocolTitle: {
-    fontSize: 15,
-    color: '#f8fafc',
-    marginBottom: 6
-  },
-  protocolDesc: {
-    fontSize: 13,
-    color: '#94a3b8',
-    lineHeight: 1.4
-  },
-  emptyContainer: {
-    textAlign: 'center',
-    padding: '48px 20px',
-    margin: '20px 0'
-  },
-  rentalsHeaderRow: {
+  priceRow: {
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-    flexWrap: 'wrap',
-    gap: 12
+    alignItems: 'flex-end',
+    background: 'rgba(255, 255, 255, 0.03)',
+    padding: '8px 12px',
+    borderRadius: 8,
+    marginBottom: 10
   },
-  refreshIconBtn: {
-    background: '#131b2e',
-    border: '1px solid rgba(255,255,255,0.08)',
-    padding: '8px 10px',
+  dailyPrice: {
+    fontSize: 18,
+    fontWeight: 800,
+    color: '#f8fafc'
+  },
+  depositPrice: {
+    fontSize: 14,
+    fontWeight: 700,
+    color: '#38bdf8'
+  },
+  privacyLockNotice: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 6,
+    fontSize: 11,
+    color: '#fbbf24',
+    background: 'rgba(245, 158, 11, 0.08)',
+    padding: '6px 10px',
+    borderRadius: 6
+  },
+  emptyStateCard: {
+    textAlign: 'center',
+    padding: '48px 24px',
+    borderRadius: 16
+  },
+  emptyIconCircle: {
+    width: 68,
+    height: 68,
+    borderRadius: '50%',
+    background: 'rgba(13, 148, 136, 0.12)',
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 16
+  },
+  roleToggleContainer: {
+    display: 'flex',
+    gap: 4,
+    background: 'rgba(255, 255, 255, 0.05)',
+    padding: 4,
     borderRadius: 8
   },
-  statusFiltersWrap: {
-    display: 'flex',
-    gap: 8,
-    marginBottom: 18,
-    overflowX: 'auto',
-    paddingBottom: 4
-  },
-  filterBtn: {
-    background: '#131b2e',
-    color: '#94a3b8',
-    border: '1px solid rgba(255,255,255,0.08)',
-    padding: '6px 12px',
-    borderRadius: 20,
-    fontSize: 12,
-    display: 'flex',
-    alignItems: 'center',
-    gap: 6,
-    whiteSpace: 'nowrap'
-  },
-  filterBtnActive: {
+  roleActiveBtn: {
     background: '#0d9488',
     color: '#fff',
-    border: '1px solid #0d9488',
-    padding: '6px 12px',
-    borderRadius: 20,
     fontSize: 12,
-    fontWeight: 600,
-    display: 'flex',
-    alignItems: 'center',
-    gap: 6,
-    whiteSpace: 'nowrap'
+    padding: '6px 14px',
+    borderRadius: 6
   },
-  filterCountBadge: {
-    background: 'rgba(0,0,0,0.25)',
-    padding: '1px 6px',
-    borderRadius: 10,
-    fontSize: 11
+  roleInactiveBtn: {
+    background: 'transparent',
+    color: '#94a3b8',
+    fontSize: 12,
+    padding: '6px 14px',
+    borderRadius: 6
   },
-  rentalsSplitLayout: {
+  rentalsLayout: {
     display: 'grid',
     gridTemplateColumns: '1fr',
-    gap: 20
+    gap: 18
   },
   rentalsListCol: {
     display: 'flex',
     flexDirection: 'column',
-    gap: 12
+    gap: 10
   },
-  rentalItemCard: {
-    padding: 14,
-    cursor: 'pointer'
-  },
-  rentalItemCardActive: {
-    padding: 14,
-    cursor: 'pointer',
-    borderColor: '#0d9488',
-    background: 'rgba(13, 148, 136, 0.1)'
-  },
-  rentalIdTag: {
-    fontSize: 11,
-    color: '#94a3b8',
-    fontWeight: 700
-  },
-  rentalDetailCol: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 16
-  },
-  detailCard: {
-    padding: 18
-  },
-  sectionHeading: {
-    fontSize: 15,
-    margin: 0,
-    display: 'flex',
-    alignItems: 'center',
-    gap: 8,
-    color: '#f8fafc'
-  },
-  stepperContainer: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(4, 1fr)',
-    gap: 8,
-    marginTop: 14,
-    textAlign: 'center'
-  },
-  stepperItem: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center'
-  },
-  stepCircleActive: {
-    width: 26,
-    height: 26,
-    borderRadius: '50%',
-    background: '#0d9488',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 6,
-    boxShadow: '0 0 10px rgba(13, 148, 136, 0.5)'
-  },
-  stepCirclePending: {
-    width: 26,
-    height: 26,
-    borderRadius: '50%',
-    background: '#172136',
-    color: '#64748b',
-    fontSize: 12,
-    fontWeight: 600,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 6
-  },
-  stepLabel: {
-    fontSize: 12,
-    fontWeight: 600,
-    color: '#f8fafc'
-  },
-  stepSub: {
-    fontSize: 10,
-    color: '#94a3b8'
-  },
-  ledgerGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(2, 1fr)',
-    gap: 10,
-    marginTop: 12
-  },
-  ledgerItem: {
-    background: '#131b2e',
-    padding: '10px 12px',
-    borderRadius: 8,
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  ledgerLabel: {
-    fontSize: 11,
-    color: '#94a3b8',
-    textTransform: 'uppercase'
-  },
-  ledgerValue: {
-    fontSize: 16,
-    color: '#f8fafc',
-    margin: '3px 0'
-  },
-  escrowNotice: {
-    display: 'flex',
-    gap: 8,
-    alignItems: 'flex-start',
-    background: 'rgba(13, 148, 136, 0.08)',
-    border: '1px solid rgba(13, 148, 136, 0.2)',
-    padding: '10px 12px',
-    borderRadius: 8,
-    marginTop: 12
-  },
-  privacyShieldState: {
-    background: 'rgba(245, 158, 11, 0.08)',
-    border: '1px dashed rgba(245, 158, 11, 0.3)',
-    padding: 14,
-    borderRadius: 8
-  },
-  unmaskedState: {
-    background: 'rgba(16, 185, 129, 0.06)',
-    border: '1px solid rgba(16, 185, 129, 0.25)',
-    padding: 14,
-    borderRadius: 8
-  },
-  contactRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingBottom: 12,
-    borderBottom: '1px solid rgba(255,255,255,0.06)',
-    marginBottom: 12,
-    flexWrap: 'wrap',
-    gap: 8
-  },
-  actionCallBtn: {
-    background: '#0d9488',
-    color: '#fff',
-    textDecoration: 'none',
-    fontSize: 12,
-    fontWeight: 600,
-    padding: '8px 12px',
-    borderRadius: 6,
-    display: 'flex',
-    alignItems: 'center',
-    gap: 6
-  },
-  actionWhatsAppBtn: {
-    background: '#16a34a',
-    color: '#fff',
-    textDecoration: 'none',
-    fontSize: 12,
-    fontWeight: 600,
-    padding: '8px 12px',
-    borderRadius: 6,
-    display: 'flex',
-    alignItems: 'center',
-    gap: 6
-  },
-  addressBox: {
-    background: '#131b2e',
-    padding: 12,
-    borderRadius: 8
-  },
-  mapsBtn: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: 6,
-    marginTop: 10,
-    color: '#38bdf8',
-    textDecoration: 'none',
-    fontSize: 13,
-    fontWeight: 600
-  },
-  smallToggleBtn: {
-    background: '#131b2e',
-    color: '#94a3b8',
-    border: '1px solid rgba(255,255,255,0.08)',
-    fontSize: 11,
-    padding: '4px 8px',
-    borderRadius: 6
-  },
-  statusBannerInfo: {
-    display: 'flex',
-    gap: 12,
-    background: 'rgba(245, 158, 11, 0.08)',
-    border: '1px solid rgba(245, 158, 11, 0.25)',
-    padding: 12,
-    borderRadius: 8
-  },
-  statusBannerSuccess: {
-    display: 'flex',
-    gap: 12,
-    background: 'rgba(16, 185, 129, 0.08)',
-    border: '1px solid rgba(16, 185, 129, 0.25)',
-    padding: 12,
-    borderRadius: 8
-  },
-  statusBannerActive: {
-    display: 'flex',
-    gap: 12,
-    background: 'rgba(14, 165, 233, 0.08)',
-    border: '1px solid rgba(14, 165, 233, 0.25)',
-    padding: 12,
-    borderRadius: 8
-  },
-  successCallout: {
-    display: 'flex',
-    gap: 12,
-    background: 'rgba(16, 185, 129, 0.1)',
-    border: '1px solid rgba(16, 185, 129, 0.3)',
-    padding: 14,
-    borderRadius: 8,
-    alignItems: 'center'
-  },
-  apkHeroCard: {
-    padding: 24
-  },
-  apkBigIcon: {
-    width: 60,
-    height: 60,
-    borderRadius: 16,
-    background: 'rgba(13, 148, 136, 0.15)',
-    border: '1px solid rgba(13, 148, 136, 0.3)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  apkStatusBox: {
-    background: '#131b2e',
-    padding: 18,
-    borderRadius: 12,
-    border: '1px solid rgba(255,255,255,0.08)'
-  },
-  guideStepsList: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 12
-  },
-  guideStep: {
-    display: 'flex',
-    gap: 14,
-    background: '#131b2e',
+  rentalCard: {
     padding: 14,
     borderRadius: 10,
-    border: '1px solid rgba(255,255,255,0.06)'
+    cursor: 'pointer'
   },
-  guideStepNumber: {
-    width: 28,
-    height: 28,
-    borderRadius: '50%',
-    background: '#0d9488',
-    color: '#fff',
-    fontWeight: 700,
-    fontSize: 13,
+  rentalCardSelected: {
+    padding: 14,
+    borderRadius: 10,
+    cursor: 'pointer',
+    border: '1px solid #0d9488',
+    background: 'rgba(13, 148, 136, 0.12)'
+  },
+  rentalDetailCard: {
+    padding: 24,
+    borderRadius: 14,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 20
+  },
+  detailHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+    paddingBottom: 16,
+    flexWrap: 'wrap',
+    gap: 12
+  },
+  unmaskedSection: {
+    background: 'rgba(255, 255, 255, 0.03)',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
+    borderRadius: 12,
+    padding: 16
+  },
+  unmaskedContentGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+    gap: 12
+  },
+  contactCard: {
+    background: '#131b2e',
+    borderRadius: 10,
+    padding: 14,
+    border: '1px solid rgba(255, 255, 255, 0.06)'
+  },
+  actionBtnSm: {
+    fontSize: 12,
+    padding: '6px 12px',
+    borderRadius: 6,
+    textDecoration: 'none'
+  },
+  lifecycleActions: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 10
+  },
+  infoBanner: {
     display: 'flex',
     alignItems: 'center',
+    gap: 8,
+    background: 'rgba(56, 189, 248, 0.1)',
+    color: '#38bdf8',
+    padding: '12px 16px',
+    borderRadius: 8,
+    fontSize: 13
+  },
+  completedBanner: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 12,
+    background: 'rgba(16, 185, 129, 0.12)',
+    border: '1px solid rgba(16, 185, 129, 0.3)',
+    color: '#10b981',
+    padding: '14px 18px',
+    borderRadius: 10
+  },
+  apkHubCard: {
+    textAlign: 'center',
+    padding: '40px 24px',
+    borderRadius: 16
+  },
+  apkIconLarge: {
+    width: 72,
+    height: 72,
+    borderRadius: 20,
+    background: 'rgba(13, 148, 136, 0.12)',
+    display: 'inline-flex',
+    alignItems: 'center',
     justifyContent: 'center',
-    flexShrink: 0
+    marginBottom: 16
+  },
+  apkStatusBox: {
+    maxWidth: 380,
+    margin: '0 auto',
+    background: '#131b2e',
+    border: '1px solid rgba(255, 255, 255, 0.08)',
+    borderRadius: 12,
+    padding: '14px 18px'
+  },
+  apkDownloadBigBtn: {
+    display: 'inline-flex',
+    textDecoration: 'none',
+    padding: '14px 28px',
+    fontSize: 16,
+    borderRadius: 10,
+    boxShadow: '0 8px 24px rgba(13, 148, 136, 0.4)'
+  },
+  installInstructions: {
+    maxWidth: 440,
+    margin: '28px auto 0',
+    background: 'rgba(255, 255, 255, 0.02)',
+    border: '1px solid rgba(255, 255, 255, 0.06)',
+    borderRadius: 10,
+    padding: '16px 20px'
   },
   modalOverlay: {
     position: 'fixed',
@@ -2537,47 +2020,125 @@ const styles = {
     left: 0,
     right: 0,
     bottom: 0,
-    background: 'rgba(0,0,0,0.7)',
+    background: 'rgba(0, 0, 0, 0.75)',
     backdropFilter: 'blur(8px)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 100,
-    padding: 16
+    padding: 16,
+    zIndex: 999
   },
-  modalBox: {
+  modalCard: {
     width: '100%',
-    maxWidth: 480,
-    padding: 20
+    maxWidth: 500,
+    padding: 24,
+    borderRadius: 14,
+    maxHeight: '90vh',
+    overflowY: 'auto'
   },
-  formLabel: {
-    display: 'block',
-    fontSize: 12,
-    color: '#94a3b8',
-    marginBottom: 5,
-    fontWeight: 500
+  modalCardLarge: {
+    width: '100%',
+    maxWidth: 620,
+    padding: 24,
+    borderRadius: 14,
+    maxHeight: '90vh',
+    overflowY: 'auto'
   },
-  modalSummaryBox: {
+  modalToolSummary: {
+    display: 'flex',
+    gap: 12,
     background: '#131b2e',
     padding: 12,
-    borderRadius: 8,
-    marginBottom: 12
+    borderRadius: 10,
+    marginBottom: 14
   },
-  summaryRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    fontSize: 13,
-    marginBottom: 4,
-    color: '#cbd5e1'
+  escrowCalcBox: {
+    background: '#131b2e',
+    borderRadius: 10,
+    padding: 14,
+    marginTop: 12,
+    border: '1px solid rgba(255, 255, 255, 0.06)'
   },
-  modalPrivacyNotice: {
+  closeBtn: {
+    background: 'transparent',
+    color: '#94a3b8',
+    fontSize: 18,
+    padding: '4px 8px'
+  },
+  errorBox: {
     display: 'flex',
     alignItems: 'center',
     gap: 8,
-    fontSize: 12,
-    color: '#fbbf24',
-    background: 'rgba(245, 158, 11, 0.08)',
-    padding: '8px 10px',
-    borderRadius: 6
+    background: 'rgba(239, 68, 68, 0.12)',
+    color: '#ef4444',
+    padding: '10px 14px',
+    borderRadius: 8,
+    fontSize: 13,
+    marginBottom: 12
+  },
+  successBox: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: 8,
+    background: 'rgba(16, 185, 129, 0.12)',
+    color: '#10b981',
+    padding: '10px 14px',
+    borderRadius: 8,
+    fontSize: 13,
+    marginBottom: 12
+  },
+  mobileNavBadge: {
+    position: 'absolute',
+    top: 4,
+    right: 18,
+    background: '#0d9488',
+    color: '#fff',
+    fontSize: 9,
+    padding: '1px 5px',
+    borderRadius: 10
+  },
+  statusPill: (status) => {
+    switch (status) {
+      case 'ACCEPTED':
+        return {
+          background: 'rgba(56, 189, 248, 0.15)',
+          color: '#38bdf8',
+          border: '1px solid rgba(56, 189, 248, 0.3)',
+          fontSize: 11,
+          fontWeight: 700,
+          padding: '3px 9px',
+          borderRadius: 20
+        };
+      case 'ACTIVE_RENTAL':
+        return {
+          background: 'rgba(16, 185, 129, 0.15)',
+          color: '#34d399',
+          border: '1px solid rgba(16, 185, 129, 0.3)',
+          fontSize: 11,
+          fontWeight: 700,
+          padding: '3px 9px',
+          borderRadius: 20
+        };
+      case 'COMPLETED':
+        return {
+          background: 'rgba(168, 85, 247, 0.15)',
+          color: '#c084fc',
+          border: '1px solid rgba(168, 85, 247, 0.3)',
+          fontSize: 11,
+          fontWeight: 700,
+          padding: '3px 9px',
+          borderRadius: 20
+        };
+      default:
+        return {
+          background: 'rgba(245, 158, 11, 0.15)',
+          color: '#fbbf24',
+          border: '1px solid rgba(245, 158, 11, 0.3)',
+          fontSize: 11,
+          fontWeight: 700,
+          padding: '3px 9px',
+          borderRadius: 20
+        };
+    }
   }
 };

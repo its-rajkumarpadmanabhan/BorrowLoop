@@ -113,6 +113,12 @@ def create_rental_request(payload: RentalCreate, db: Session = Depends(get_db)):
     if not tool:
         raise HTTPException(status_code=404, detail="Tool not found")
 
+    borrower_id_clean = payload.borrower_id.strip().lower() if payload.borrower_id else "borrower_user"
+    owner_id_clean = tool.owner_id.strip().lower() if tool.owner_id else ""
+
+    if borrower_id_clean and owner_id_clean and borrower_id_clean == owner_id_clean:
+        raise HTTPException(status_code=400, detail="You cannot borrow your own equipment listing.")
+
     try:
         start_dt = datetime.datetime.strptime(payload.start_date, "%Y-%m-%d").date()
         end_dt = datetime.datetime.strptime(payload.end_date, "%Y-%m-%d").date()
@@ -126,7 +132,7 @@ def create_rental_request(payload: RentalCreate, db: Session = Depends(get_db)):
 
     rental = Rental(
         tool_id=tool.id,
-        borrower_id=payload.borrower_id or "borrower_rahul",
+        borrower_id=borrower_id_clean,
         borrower_name=payload.borrower_name,
         borrower_phone=payload.borrower_phone,
         start_date=payload.start_date,
@@ -137,7 +143,7 @@ def create_rental_request(payload: RentalCreate, db: Session = Depends(get_db)):
         security_deposit=security_deposit,
         total_amount=total_amount,
         payment_method=payload.payment_method or "UPI",
-        upi_id=f"{tool.owner_id}@borrowloop",
+        upi_id=f"{tool.owner_id.split('@')[0]}@borrowloop",
         status="REQUESTED",
         created_at=datetime.datetime.utcnow(),
         refund_status="PENDING"
@@ -156,12 +162,21 @@ def get_all_rentals(
     status: Optional[str] = None,
     db: Session = Depends(get_db)
 ):
-    """Fetch rental bookings with conditional privacy masking."""
+    """Fetch rental bookings with dynamic filtering by user and role."""
     query = db.query(Rental).join(Tool)
-    
+
+    if user_id:
+        uid = user_id.strip().lower()
+        if role == "BORROWER":
+            query = query.filter(Rental.borrower_id == uid)
+        elif role == "OWNER":
+            query = query.filter(Tool.owner_id == uid)
+        else:
+            query = query.filter((Rental.borrower_id == uid) | (Tool.owner_id == uid))
+
     if status and status.upper() != "ALL":
         query = query.filter(Rental.status == status.upper())
-        
+
     rentals = query.order_by(Rental.id.desc()).all()
     results = []
     for r in rentals:

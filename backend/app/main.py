@@ -6,8 +6,7 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from sqlalchemy.orm import Session
 
 from .database import engine, Base, get_db
-from .seed_data import seed_database_if_empty
-from .routers import tools, rentals, geo
+from .routers import auth, tools, rentals, geo
 
 # Create SQLite database tables
 Base.metadata.create_all(bind=engine)
@@ -15,7 +14,7 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(
     title="BorrowLoop",
     description="Hyperlocal Tool Sharing & Handover Protocol with Geospatial Proximity and Escrow Handover",
-    version="1.0.0"
+    version="2.0.0"
 )
 
 # Enable CORS for universal client (Web desktop, mobile web, and Capacitor Android WebView)
@@ -27,16 +26,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Seed initial database
-@app.on_event("startup")
-def on_startup():
-    db = next(get_db())
-    try:
-        seed_database_if_empty(db)
-    finally:
-        db.close()
-
 # Include REST API Routers
+app.include_router(auth.router)
 app.include_router(tools.router)
 app.include_router(rentals.router)
 app.include_router(geo.router)

@@ -133,83 +133,9 @@ SAMPLE_TOOLS = [
 
 
 def seed_database_if_empty(db: Session):
-    existing_tools = db.query(Tool).count()
-    if existing_tools == 0:
-        created_tools = []
-        for tool_dict in SAMPLE_TOOLS:
-            tool = Tool(**tool_dict)
-            db.add(tool)
-            created_tools.append(tool)
-        db.commit()
+    """
+    Automatic seeding of test/fake data disabled.
+    All tools and rentals are created dynamically by authentic logged-in users.
+    """
+    pass
 
-        # Refresh tools to get IDs
-        for t in created_tools:
-            db.refresh(t)
-
-        now = datetime.datetime.utcnow()
-        
-        # 1. Seed a sample REQUESTED rental (Demonstrates Pre-acceptance privacy shield)
-        rental_requested = Rental(
-            tool_id=created_tools[0].id,  # Bosch Hammer Drill
-            borrower_id="borrower_rahul",
-            borrower_name="Rahul Varma",
-            borrower_phone="+919895012345",
-            start_date=(now + datetime.timedelta(days=1)).strftime("%Y-%m-%d"),
-            end_date=(now + datetime.timedelta(days=2)).strftime("%Y-%m-%d"),
-            duration_days=2,
-            daily_rate=created_tools[0].daily_rate,
-            rental_fee=created_tools[0].daily_rate * 2,
-            security_deposit=created_tools[0].replacement_deposit,
-            total_amount=(created_tools[0].daily_rate * 2) + created_tools[0].replacement_deposit,
-            payment_method="UPI",
-            status="REQUESTED",
-            created_at=now - datetime.timedelta(hours=3),
-            refund_status="PENDING"
-        )
-        db.add(rental_requested)
-
-        # 2. Seed a sample ACCEPTED rental (Demonstrates UNMASKED contact, exact address & Google Maps)
-        rental_accepted = Rental(
-            tool_id=created_tools[1].id,  # DeWalt Cordless Circular Saw
-            borrower_id="borrower_rahul",
-            borrower_name="Rahul Varma",
-            borrower_phone="+919895012345",
-            start_date=now.strftime("%Y-%m-%d"),
-            end_date=(now + datetime.timedelta(days=1)).strftime("%Y-%m-%d"),
-            duration_days=1,
-            daily_rate=created_tools[1].daily_rate,
-            rental_fee=created_tools[1].daily_rate,
-            security_deposit=created_tools[1].replacement_deposit,
-            total_amount=created_tools[1].daily_rate + created_tools[1].replacement_deposit,
-            payment_method="UPI",
-            status="ACCEPTED",
-            created_at=now - datetime.timedelta(hours=6),
-            accepted_at=now - datetime.timedelta(hours=1),
-            refund_status="PENDING"
-        )
-        db.add(rental_accepted)
-
-        # 3. Seed an ACTIVE_RENTAL (Owner confirmed payment, escrow held, item handed over)
-        rental_active = Rental(
-            tool_id=created_tools[2].id,  # Kärcher High Pressure Washer
-            borrower_id="borrower_rahul",
-            borrower_name="Rahul Varma",
-            borrower_phone="+919895012345",
-            start_date=(now - datetime.timedelta(days=1)).strftime("%Y-%m-%d"),
-            end_date=now.strftime("%Y-%m-%d"),
-            duration_days=1,
-            daily_rate=created_tools[2].daily_rate,
-            rental_fee=created_tools[2].daily_rate,
-            security_deposit=created_tools[2].replacement_deposit,
-            total_amount=created_tools[2].daily_rate + created_tools[2].replacement_deposit,
-            payment_method="UPI",
-            status="ACTIVE_RENTAL",
-            created_at=now - datetime.timedelta(days=1, hours=2),
-            accepted_at=now - datetime.timedelta(days=1),
-            pickup_confirmed_at=now - datetime.timedelta(days=1),
-            handover_notes="Paid via Google Pay UPI. ₹18,000 security collateral held in escrow. Washer and high-pressure hose handed over.",
-            refund_status="PENDING"
-        )
-        db.add(rental_active)
-
-        db.commit()

@@ -82,3 +82,17 @@ class Rental(Base):
 
     # Relationship
     tool = relationship("Tool", back_populates="rentals")
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    email = Column(String(120), unique=True, index=True, nullable=False)
+    full_name = Column(String(100), nullable=False)
+    phone = Column(String(20), nullable=False)
+    locality = Column(String(100), nullable=True, default="")
+    pincode = Column(String(10), nullable=True, default="")
+    upi_id = Column(String(50), nullable=True, default="")
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
